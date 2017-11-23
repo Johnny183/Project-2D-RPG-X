@@ -1,0 +1,50 @@
+The Discovery
+
+Unity Test Universe:
+
+COMPLETED
+World Props Prefabs - Done
+Player Controller - Done
+Player Health - Done
+Player Experience - Done
+Player Currency - Done
+Player Health UI - Done
+Player Experience UI - Done
+Player Idle Animations - Done
+Player Interact Ability - Done
+Player Shooting Fundamentals - Done
+Game Manager Instancing and Persistance - Done
+Game Manager Fundamentals - Done
+Moving Objects Between Points Functionality - Done
+Player Speaking Text - Done
+Local saving (No level data) - Done
+Local loading (No level data) - Done
+
+
+TO-DO
+Player Currency UI
+Player Attack Animations
+Player Damage Animations
+Player Death Animations
+Object Pooling
+Currency Pickups
+Dialog Box
+Checkpoints
+Damage Text
+AI Script Fundamentals
+Friendly AI
+Friendly Shops
+Enemies Fundamentals
+Enemies Animations
+Scrolling Background
+Inventory System
+ITEMS Weapons
+ITEMS Pickups
+Chest loot Functionality
+
+
+CONCEPTS
+Player Individual Pieces
+Bosses
+Menus
+Multiplayer
