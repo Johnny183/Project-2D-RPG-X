@@ -60,7 +60,7 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	private void PlayerDeath(){
-		// Handle player death
+		GameManager.instance.OnPlayerDeath(gameObject);
 		GameManager.instance.LoadGameScene("Level1");
 	}
 }

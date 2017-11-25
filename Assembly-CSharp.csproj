@@ -168,6 +168,7 @@
      <Compile Include="Assets\Scripts\Player Scripts\PlayerQMenu.cs" />
      <Compile Include="Assets\Scripts\Player Scripts\PlayerShooting.cs" />
      <Compile Include="Assets\Scripts\Projectile Scripts\BulletScript.cs" />
+     <Compile Include="Assets\Scripts\Projectile Scripts\MissileScript.cs" />
      <Compile Include="Assets\Scripts\SceneSetupManager.cs" />
      <Compile Include="Assets\Scripts\ScrollingObject.cs" />
      <Compile Include="Assets\Scripts\SmoothCamera.cs" />

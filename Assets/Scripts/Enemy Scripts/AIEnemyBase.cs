@@ -62,14 +62,15 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	public virtual void TakeDamage(GameObject caller, int damage){
-		int curHealth = caller.GetComponent<AIEnemyInterface>().GetAIHealth();
+		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
+		int curHealth = callerScript.GetAIHealth();
 		curHealth -= damage;
-		caller.GetComponent<AIEnemyInterface>().SetAIHealth(curHealth);
+		callerScript.SetAIHealth(curHealth);
 		if(curHealth <= 0){
-			caller.GetComponent<AIEnemyInterface>().EnemyDeath();
+			callerScript.EnemyDeath();
 		}
-		caller.GetComponent<AIEnemyInterface>().SetDamagedTrue();
-		caller.GetComponent<AIEnemyInterface>().SetTargetSpotted(true);
+		callerScript.SetDamagedTrue();
+		callerScript.SetTargetSpotted(true);
 		UpdateUIValues(caller);
 	}
 
@@ -110,6 +111,7 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	protected virtual void AlertEnemiesInProximity(GameObject caller, float alertRange){
+		AIEnemyInterface callerScript = GetComponent<AIEnemyInterface>();
 		for(int i = 0; i < activeEnemies.Count; i++){
 			if(!activeEnemies[i].GetComponent<AIEnemyInterface>().GetTargetSpotted()) {
 				float distance = Vector3.Distance(caller.transform.position, activeEnemies[i].transform.position);
@@ -133,6 +135,7 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	protected virtual void Move(GameObject caller, Vector3 destination, float moveSpeed, string facingDirection, float distanceToCheck, LayerMask blockingLayer){
+		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
 		bool checkPath = IsPathClear(caller, destination, distanceToCheck, blockingLayer);
 		Vector3 curPos = caller.transform.position;
 		if(!checkPath){
@@ -143,13 +146,13 @@ public class AIEnemyBase : AttackBase {
 		caller.transform.position = targetPos;
 
 		if(curPos.x > caller.transform.position.x){
-			caller.GetComponent<AIEnemyInterface>().SetFacingDirection("LEFT");
+			callerScript.SetFacingDirection("LEFT");
 		} else if(curPos.x < caller.transform.position.x){
-			caller.GetComponent<AIEnemyInterface>().SetFacingDirection("RIGHT");
+			callerScript.SetFacingDirection("RIGHT");
 		} else if(curPos.y > caller.transform.position.y) {
-			caller.GetComponent<AIEnemyInterface>().SetFacingDirection("DOWN");
+			callerScript.SetFacingDirection("DOWN");
 		} else if(curPos.y < caller.transform.position.y) {
-			caller.GetComponent<AIEnemyInterface>().SetFacingDirection("UP");
+			callerScript.SetFacingDirection("UP");
 		}
 	}
 
@@ -185,17 +188,20 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	protected void UpdateUIValues(GameObject caller){
-		caller.GetComponent<AIEnemyInterface>().SetUIHealthSliderMaxValue(caller.GetComponent<AIEnemyInterface>().GetAIMaxHealth());
-		caller.GetComponent<AIEnemyInterface>().SetUIHealthSliderValue(caller.GetComponent<AIEnemyInterface>().GetAIHealth());
-		caller.GetComponent<AIEnemyInterface>().SetUINameText(caller.GetComponent<AIEnemyInterface>().GetAINameText());
+		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
+		callerScript.SetUIHealthSliderMaxValue(caller.GetComponent<AIEnemyInterface>().GetAIMaxHealth());
+		callerScript.SetUIHealthSliderValue(caller.GetComponent<AIEnemyInterface>().GetAIHealth());
+		callerScript.SetUINameText(caller.GetComponent<AIEnemyInterface>().GetAINameText());
 	}
 
 	protected void UpdateUIPositions(GameObject caller, float yOffaxisHP, float yOffaxisName){
+		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
+
 		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + yOffaxisHP, transform.position.x));
-		caller.GetComponent<AIEnemyInterface>().SetUIHealthPosition(screenPos);
-		
+		callerScript.SetUIHealthPosition(screenPos);
+
 		screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + yOffaxisName, transform.position.x));
-		caller.GetComponent<AIEnemyInterface>().SetUINameTextPosition(screenPos);
+		callerScript.SetUINameTextPosition(screenPos);
 	}
 }
 

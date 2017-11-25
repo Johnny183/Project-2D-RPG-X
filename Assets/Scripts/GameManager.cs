@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour {
 	void Start(){
 		weaponBase = GetComponent<WeaponBase>();
 		aiEnemyBase = GetComponent<AIEnemyBase>();
+
 		LoadGameScene("Level1");
 	}
 
@@ -76,6 +77,16 @@ public class GameManager : MonoBehaviour {
 		playerExp = 0;
 		playerIneractDist = 2f;
 		SaveGame();
+	}
+
+	// Called when a player spawn
+	public void OnPlayerSpawn(GameObject player){
+
+	}
+
+	// Called when a player deaths
+	public void OnPlayerDeath(GameObject player){
+
 	}
 
 	public void LoadGameScene(string sceneName){
