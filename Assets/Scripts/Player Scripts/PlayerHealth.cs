@@ -16,7 +16,6 @@ public class PlayerHealth : MonoBehaviour {
 
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		playerHealth = GameManager.instance.playerStartingHealth;
 		playerMaxHealth = playerHealth + (GameManager.instance.playerLevel * 10);
 		playerHealth = playerMaxHealth;
 		UpdatePlayerHealth();

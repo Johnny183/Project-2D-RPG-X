@@ -6,12 +6,11 @@ using UnityEngine;
 public class weaponDefaultGun : WeaponBase, CustomWeaponInterface {
 	public GameObject primaryFire;
 	public GameObject specialFire;
-	public int specialCountDown = 30;
+	public int specialCountDown = 10;
 	
 	void Start() {
-		specialText = GameObject.FindWithTag("SpecialText").GetComponent<Text>();
 		SpecialCooldownStart(specialCountDown);
-		//transform.SetParent(GameObject.FindGameObjectWithTag("WeaponSlot").transform);
+		SetSpecialImage(specialFire.GetComponent<SpriteRenderer>().sprite);
 	}
 
 	void FixedUpdate() {

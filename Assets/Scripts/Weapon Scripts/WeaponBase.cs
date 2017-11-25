@@ -5,12 +5,18 @@ using UnityEngine;
 
 public class WeaponBase : MonoBehaviour {
 	
-	protected Text specialText;
 	protected PlayerExperience playerExperience;
 	protected PlayerController playerController;
 	protected GameObject player;
+	protected Text specialText;
+	protected Text specialTime;
+	protected Image specialImage;
+	protected Image specialBlur;
+	protected Sprite weaponSpecialSprite;
+
 	private bool canFireSpecial = false;
 	private bool alertActive = false;
+	private float specialCooldown;
 
 	public void Awake(){
 		LoadWeaponBase();
@@ -21,25 +27,20 @@ public class WeaponBase : MonoBehaviour {
 			player = GameObject.FindGameObjectWithTag("Player");
 			playerExperience = player.GetComponent<PlayerExperience>();
 			playerController = player.GetComponent<PlayerController>();
+			specialTime = GameObject.Find("SpecialTime").GetComponent<Text>();
+			specialBlur = GameObject.Find("SpecialBlur").GetComponent<Image>();
+			specialImage = GameObject.Find("SpecialImage").GetComponent<Image>();
 		}
 	}
 
 	void Update(){
-		if(alertActive){
-			if(playerExperience.playerLevelingUp){
-				specialText.gameObject.SetActive(false);
-			} else {
-				specialText.gameObject.SetActive(true);
-			}
-
-			Vector3 screenPos;
-			if(playerController.isPlayerSpeaking){
-				screenPos = Camera.main.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + 1.2f, player.transform.position.x));
-			} else {
-				screenPos = Camera.main.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.x));
-			}
-			specialText.transform.position = screenPos;
+		if(!alertActive){
+			specialBlur.fillAmount -= 1 / specialCooldown * Time.deltaTime;
 		}
+	}
+
+	protected void SetSpecialImage(Sprite image){
+		specialImage.sprite = image;
 	}
 
 	protected bool isSpecialAvailable(){
@@ -53,19 +54,21 @@ public class WeaponBase : MonoBehaviour {
 	protected void SpecialCooldownStart(int countDown){
 		canFireSpecial = false;
 		alertActive = false;
-		specialText.gameObject.SetActive(false);
-		StartCoroutine(SpecialCountDown(countDown));
+		specialBlur.fillAmount = 1;
+		specialCooldown = countDown;
+		StartCoroutine(SpecialVisualCountdown(countDown));
 	}
 
-	private IEnumerator SpecialCountDown(int countDown){
-		yield return new WaitForSeconds(countDown);
-		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + 1.2f, player.transform.position.x));
-		specialText.transform.position = screenPos;
-		specialText.text = "Special Ready!";
-		specialText.color = Color.yellow;
-		specialText.gameObject.SetActive(true);
+	private IEnumerator SpecialVisualCountdown(int countDown){
+		specialTime.text = "" + countDown;
+		while(countDown != 0){
+			yield return new WaitForSeconds(1);
+			countDown--;
+			specialTime.text = "" + countDown;
+		}
 		canFireSpecial = true;
 		alertActive = true;
+		specialTime.text = "";
 	}
 }
 

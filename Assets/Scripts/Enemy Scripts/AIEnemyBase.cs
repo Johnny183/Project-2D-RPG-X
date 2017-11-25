@@ -20,6 +20,7 @@ public class AIEnemyBase : AttackBase {
 	public int maxMeleeDamage = 20;
 	public float attackDistance = 1f;
 	public float attackDelay = 2f;
+	public float distanceToTarget = 1f;
 	public SpriteRenderer spriteRenderer;
 	public LayerMask blockingLayer;
 
@@ -111,7 +112,6 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	protected virtual void AlertEnemiesInProximity(GameObject caller, float alertRange){
-		AIEnemyInterface callerScript = GetComponent<AIEnemyInterface>();
 		for(int i = 0; i < activeEnemies.Count; i++){
 			if(!activeEnemies[i].GetComponent<AIEnemyInterface>().GetTargetSpotted()) {
 				float distance = Vector3.Distance(caller.transform.position, activeEnemies[i].transform.position);

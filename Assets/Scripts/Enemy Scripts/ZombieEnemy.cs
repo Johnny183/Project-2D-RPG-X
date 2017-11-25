@@ -33,7 +33,6 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 			targetSpotted = true;
 			pathing = true;
 			seeker.StartPath(transform.position, target.transform.position, OnPathComplete);
-			//path.BlockUntilCalculated();
 		} else {
 			pathing = false;
 			targetSpotted = false;
@@ -71,19 +70,11 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 
 		if(targetSpotted){
 			// Visual Range amplifier if we are chasing the target
-			targetInRange = IsTargetInVisualRange(gameObject, visualRange * 1.3f, targetSpotted);
+			targetInRange = IsTargetInVisualRange(gameObject, visualRange * 1.4f, targetSpotted);
 		} else {
 			// If we have yet to spot the target, normal visual range.
 			targetInRange = IsTargetInVisualRange(gameObject, visualRange, targetSpotted);
 		}
-
-		/*if(targetInRange){
-			//Move(gameObject, target.transform.position, moveSpeed * Time.deltaTime, facingDirection, 0.6f, blockingLayer);
-			targetSpotted = true;
-		} else {
-			targetSpotted = false;
-		}*/
-		//ChangeDirection(gameObject, facingDirection);
 
 		if(pathing){
 			if(path == null){
@@ -95,8 +86,9 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 			}
 
 			Vector2 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
-			//transform.position = Vector3.MoveTowards(transform.position, path.vectorPath[currentWaypoint], moveSpeed * Time.fixedDeltaTime);
-			rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
+			if(Vector2.Distance(transform.position, target.transform.position) >= distanceToTarget){
+				rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
+			}
 
 			if(Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]) < 1f){
 				currentWaypoint++;
