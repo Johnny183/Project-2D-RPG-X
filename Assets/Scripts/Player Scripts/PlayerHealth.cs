@@ -4,19 +4,34 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
+	[SerializeField]
+	private int playerHealth;
+
 	public Slider healthSlider;
 	public Image damageImage;
 	public float flashSpeed = 5f;
 	public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 	
+	private PlayerController playerController;
 	private SpriteRenderer spriteRenderer;
-	private int playerHealth;
+	private Animator animator;
+
 	private int playerMaxHealth;
 	private bool damaged = false;
 
 	void Start () {
+		playerController = GetComponent<PlayerController>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		playerMaxHealth = playerHealth + (GameManager.instance.playerLevel * 10);
+		animator = GetComponent<Animator>();
+
+		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
+		int statsHealth = 0;
+		for(int i = 0; i < currentEquipment.Length; i++){
+			if(currentEquipment[i] != null){
+				statsHealth += currentEquipment[i].armorModifier;
+			}
+		}
+		playerMaxHealth = GameManager.instance.playerStartingHealth + statsHealth;
 		playerHealth = playerMaxHealth;
 		UpdatePlayerHealth();
 	}
@@ -36,13 +51,18 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	public void TakeDamage(int amount){
-		playerHealth -= amount;
-		if(playerHealth <= 0){
-			PlayerDeath();
-			return;
+		if(playerHealth != 0){
+			playerHealth -= amount;
+			if(playerHealth <= 0){
+				playerHealth = 0;
+				// Player Death animation
+				PlayerDeath();
+			} else {
+				animator.SetTrigger("PlayerHit");
+			}
+			damaged = true;
+			UpdatePlayerHealth();
 		}
-		damaged = true;
-		UpdatePlayerHealth();
 	}
 
 	public void AddHealth(int amount){
@@ -59,7 +79,8 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	private void PlayerDeath(){
-		GameManager.instance.OnPlayerDeath(gameObject);
+		// Set player controller to death state
+		UpdatePlayerHealth();
 		GameManager.instance.LoadGameScene("Level1");
 	}
 }

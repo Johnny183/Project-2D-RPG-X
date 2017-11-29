@@ -21,19 +21,14 @@ public class PlayerController : MonoBehaviour {
 
 	void Awake(){
 		Cursor.visible = false;
+		playerUI.gameObject.SetActive(true);
 		rb2d = GetComponent<Rigidbody2D>();
 		boxCollider = GetComponent<BoxCollider2D>();
 		playerInteractDist = GameManager.instance.playerIneractDist;
-		playerUI.gameObject.SetActive(true);
+	}
 
-		// Get our active weapon from the game manager and spawn it within the weapon slot
-		GameObject destroyWeapon = GameObject.FindGameObjectWithTag("Weapon");
-		Destroy(destroyWeapon);
-	
-		GameObject activeWeapon = GameManager.instance.activeWeapon;
-		GameObject weapon = Instantiate(activeWeapon, transform.position, transform.rotation);
-		UnityEditor.Selection.activeObject = weapon;
-		weapon.transform.hideFlags = HideFlags.None;
+	void Start(){
+		EquipmentManager.instance.LoadPlayerEquipment();
 	}
 	
 	// Called every game frame
@@ -117,13 +112,24 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	// When we collide with another object that has a collider attached to the gameobject
+	void OnCollisionEnter2D(Collision2D collision) {
+		if(collision.transform.CompareTag("Food")){
+			collision.transform.GetComponent<InteractableObject>().Interact(transform);
+		} else if(collision.transform.CompareTag("ItemPickup")){
+			collision.transform.GetComponent<InteractableItem>().PickUp(gameObject);
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other){
+		if(other.transform.CompareTag("ItemPickup")){
+			other.transform.GetComponent<InteractableItem>().PickUp(gameObject);
+		}
+	}
+
 	// Called when an interactable object has been hit
 	private void InteractWithObject(Transform other){
-		if(other.tag == "Food"){
-			other.gameObject.SetActive(false);
-			InteractableObject script = other.gameObject.GetComponent<InteractableObject>();
-			script.Interact(transform);
-		}
+
 	}
 
 	// Checks to see if we have hit an object that we can interact with
@@ -144,7 +150,6 @@ public class PlayerController : MonoBehaviour {
 				checkDirection = Physics2D.Linecast(transform.position, new Vector2(transform.position.x, transform.position.y - playerInteractDist), blockingLayer);
 				break;
 		}
-
 		if(checkDirection.transform != null){
 			InteractWithObject(checkDirection.transform);
 		}

@@ -45,8 +45,9 @@ public class InteractableObject : MonoBehaviour {
 		PlayerController playerController = other.GetComponent<PlayerController>();
 		PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
 		PlayerExperience playerExperience = other.GetComponent<PlayerExperience>();
-		playerHealth.TakeDamage(10);
+		playerHealth.TakeDamage(20);
 		playerExperience.AddExp(250);
 		playerController.CallPlayerSpeak("You picked up a " + randItems[randIndex], Color.yellow, 0, 4, 0f);
+		Destroy(gameObject);
 	}
 }

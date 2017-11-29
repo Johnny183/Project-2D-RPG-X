@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 802a69c567e9c434d8c53b0d4616dc19, type: 3}
+  m_Name: TestItem
+  m_EditorClassIdentifier: 
+  name: Some Cool Item Name
+  desc: A really cool item that does stuff
+  icon: {fileID: 21300000, guid: 7931262bee02b4179ab843cecd12cb07, type: 3}
+  sellPrice: 5
+  buyPrice: 10

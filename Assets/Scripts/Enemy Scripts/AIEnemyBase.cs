@@ -44,10 +44,6 @@ public class AIEnemyBase : AttackBase {
 		LoadAIEnemyBase();
 	}
 
-	void Update(){
-		// If we can't find a target using our load enemy base method, keep re-loading every 2 seconds until we do
-	}
-
 	public void LoadAIEnemyBase(){
 		if(GameObject.FindGameObjectWithTag("Player") != null){
 			target = GameObject.FindGameObjectWithTag("Player");
@@ -160,10 +156,10 @@ public class AIEnemyBase : AttackBase {
 		Debug.Log(facingDirection);
 		switch(facingDirection){
 			case "RIGHT":
-				caller.transform.eulerAngles = new Vector3(transform.rotation.x, 180, transform.rotation.x);
+				caller.transform.eulerAngles = new Vector3(caller.transform.rotation.x, 180, caller.transform.rotation.z);
 				break;
 			case "LEFT":
-				caller.transform.eulerAngles = new Vector3(transform.rotation.x, 0, transform.rotation.x);
+				caller.transform.eulerAngles = new Vector3(caller.transform.rotation.x, 0, caller.transform.rotation.z);
 				break;
 			case "UP":
 				break;

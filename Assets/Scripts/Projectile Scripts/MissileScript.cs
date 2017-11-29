@@ -8,6 +8,7 @@ public class MissileScript : MonoBehaviour {
 	public float missileVelocity = 5f;
 	public int minDamage = 30;
 	public int maxDamage = 50;
+	public float explosionRadius = 2f;
 	public GameObject explosionEffect;
 
 	private int randomDamage;
@@ -19,7 +20,7 @@ public class MissileScript : MonoBehaviour {
 	void Start () {
 		randomDamage = Random.Range(minDamage, maxDamage+1);
 		rb2d = gameObject.GetComponent<Rigidbody2D>();
-		StartCoroutine(delayExplosion(0.2f));
+		StartCoroutine(delayExplosion(0.1f));
 	}
 	
 	private IEnumerator delayExplosion(float delayTime){
@@ -53,13 +54,23 @@ public class MissileScript : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		if(other.gameObject.tag == "Food" || other.gameObject.tag == "Floor" || other.gameObject.tag == "Projectile" || !canExplode) return;
-		if(other.gameObject.tag == "Player"){
-			PlayerHealth playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-			playerHealth.TakeDamage(randomDamage);
-		} else if(other.gameObject.tag == "Enemy"){
-			other.GetComponent<AIEnemyBase>().TakeDamage(other.gameObject, randomDamage);
+		
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.NameToLayer("blockingLayer"));
+
+		foreach (Collider2D nearbyObject in colliders) {
+			float proximity = (transform.position - nearbyObject.transform.position).magnitude;
+			int newDamage = Mathf.CeilToInt(randomDamage - (proximity / explosionRadius));
+			
+			if(nearbyObject.CompareTag("Player")){
+				PlayerHealth playerHealth = nearbyObject.gameObject.GetComponent<PlayerHealth>();
+				playerHealth.TakeDamage(newDamage);
+			} else if (nearbyObject.CompareTag("Enemy")){
+				nearbyObject.GetComponent<AIEnemyBase>().TakeDamage(nearbyObject.gameObject, newDamage);
+			}
 		}
-		Instantiate(explosionEffect, transform.position, transform.rotation);
+
+		GameObject effect = Instantiate(explosionEffect, transform.position, transform.rotation);
+		Destroy(effect, 2f);
 		Destroy(gameObject);
 	}
 }

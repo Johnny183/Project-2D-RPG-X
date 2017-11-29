@@ -6,11 +6,14 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour {
 
 	//Static instance of GameManager which allows it to be accessed by any other script.
 	public static GameManager instance = null;
+
+	[HideInInspector] public string gameState = "Menu";
 
 	[Header("Game Manager Options")]
 	public bool presetManagerValues;
@@ -18,22 +21,23 @@ public class GameManager : MonoBehaviour {
 
 	[Header("Game Options")]
 	public int currentGameLevel;
-	public GameObject[] weaponsList;
+	public List<Equipment> gameEquipment;
+	public List<Item> gameItems;
 
 	[Header("Player Options")]
 	public int playerStartingHealth;
+	public int playerStartingDamage;
 	public int playerCoins;
 	public int playerLevel;
 	public int playerExp;
 	public float playerIneractDist;
-	public GameObject activeWeapon;
 
 	[Header("Audio Options")]
 	public int gameVolume;
 	public int musicVolume;
 
-	private WeaponBase weaponBase;
 	private AIEnemyBase aiEnemyBase;
+	private FadeScenes fadeScenes;
 
 	void Awake(){
 		//Check if instance already exists
@@ -48,21 +52,28 @@ public class GameManager : MonoBehaviour {
 
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
+	}
 
+	// For testing, will be removed when we have a menu to load scenes from
+	void Start(){
 		// Load our game, if not, setup our defaults
 		if(presetManagerValues){
+			int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+			EquipmentManager.instance.currentEquipment = new Equipment[numSlots];
+			InventoryManager.instance.items = new List<Item>();
 			SaveGame();
 		} else {
 			if(!LoadGame() || resetDefaults){
 				SetupDefaults();
 			}
 		}
-	}
 
-	// For testing, will be removed when we have a menu to load scenes from
-	void Start(){
-		weaponBase = GetComponent<WeaponBase>();
 		aiEnemyBase = GetComponent<AIEnemyBase>();
+		fadeScenes = GetComponent<FadeScenes>();
+
+		// Load our persistent scenes on top of our level scene
+		SceneManager.LoadScene("PlayerQMenu", LoadSceneMode.Additive);
+		SceneManager.LoadScene("PauseMenu", LoadSceneMode.Additive);
 
 		LoadGameScene("Level1");
 	}
@@ -72,57 +83,69 @@ public class GameManager : MonoBehaviour {
 		Debug.Log("Setting up defaults");
 		currentGameLevel = 1;
 		playerStartingHealth = 100;
+		playerStartingDamage = 10;
 		playerCoins = 0;
 		playerLevel = 1;
 		playerExp = 0;
 		playerIneractDist = 2f;
+
+		int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+		EquipmentManager.instance.currentEquipment = new Equipment[numSlots];
+		InventoryManager.instance.items = new List<Item>();
+
 		SaveGame();
 	}
 
-	// Called when a player spawn
-	public void OnPlayerSpawn(GameObject player){
-
-	}
-
-	// Called when a player deaths
-	public void OnPlayerDeath(GameObject player){
-
-	}
-
 	public void LoadGameScene(string sceneName){
+		if(sceneName == "Menu"){
+			gameState = "Menu";
+		} else {
+			gameState = "Game";
+		}
+
+		StartCoroutine(LoadScene(sceneName));
+	}
+
+	private IEnumerator LoadScene(string sceneName){
+		fadeScenes.BeginFade(1);
+		yield return new WaitForSeconds(fadeScenes.fadeSpeed);
+
 		// Load game scene as a single entity
 		SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 		SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
 
-		// Load our base classes
-		weaponBase.LoadWeaponBase();
-		aiEnemyBase.LoadAIEnemyBase();
-
-		// Load our persistent scenes on top of our level scene
-		SceneManager.LoadScene("PlayerQMenu", LoadSceneMode.Additive);
-		SceneManager.LoadScene("PauseMenu", LoadSceneMode.Additive);
-
-	}
-
-	public void LoadTitleScene(){
-		// Load menu scene as a single entity
-		SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-		SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
+		fadeScenes.BeginFade(-1);
 	}
 
 	// Save current game data to binary encoded file
 	public void SaveGame(){
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + "/gameData.dat");
-
 		GameData data = new GameData();
+
+		// Save generic game data
 		data.currentGameLevel = currentGameLevel;
 		data.playerStartingHealth = playerStartingHealth;
+		data.playerStartingDamage = playerStartingDamage;
 		data.playerCoins = playerCoins;
 		data.playerLevel = playerLevel;
 		data.playerExp = playerExp;
-		data.activeWeaponName = activeWeapon.name;
 
+		// Save equipment names in string list for storing (Can't store custom scriptable objects)
+		for(int i = 0; i < EquipmentManager.instance.currentEquipment.Length; i++){
+			if(EquipmentManager.instance.currentEquipment[i] != null){
+				data.currentEquipment.Add(EquipmentManager.instance.currentEquipment[i].name);
+			} else {
+				data.currentEquipment.Add(null);
+			}
+		}
+		
+		// Save inventory names in string list for storing (Can't store custom scriptable objects)
+		for(int i = 0; i < InventoryManager.instance.items.Count; i++){
+			data.inventory.Add(InventoryManager.instance.items[i].name);
+		}
+
+		// Serialize our file with the GameData class and close the file
 		bf.Serialize(file, data);
 		file.Close();
 		Debug.Log("Game saved to: " + Application.persistentDataPath + "/gameData.dat successfully");
@@ -136,17 +159,38 @@ public class GameManager : MonoBehaviour {
 			GameData data = (GameData)bf.Deserialize(file);
 			file.Close();
 
+			// Load generic game data
 			currentGameLevel = data.currentGameLevel;
 			playerStartingHealth = data.playerStartingHealth;
+			playerStartingDamage = data.playerStartingDamage;
 			playerCoins = data.playerCoins;
 			playerLevel = data.playerLevel;
 			playerExp = data.playerExp;
 
-			// Get our active weapon through its name
-			for(int i = 0; i < weaponsList.Length; i++){
-				if(weaponsList[i].name == data.activeWeaponName){
-					activeWeapon = weaponsList[i];
-					break;
+			// Load player equipment
+			for(int i = 0; i < data.currentEquipment.Count; i++){
+				for(int y = 0; y < gameEquipment.Count; y++){
+					if(gameEquipment[y].name == data.currentEquipment[i]){
+						EquipmentManager.instance.AddToEquipmentIndex(gameEquipment[y], i);
+						break;
+					}
+				}
+			}
+
+			// Load player inventory
+			for(int i = 0; i < data.inventory.Count; i++){
+				for(int y = 0; y < gameItems.Count; y++){
+					if(gameItems[y].name == data.inventory[i]){
+						InventoryManager.instance.AddToInventoryIndex(gameItems[y]);
+						break;
+					}
+				}
+
+				for(int y = 0; y < gameEquipment.Count; y++){
+					if(gameEquipment[y].name == data.inventory[i]){
+						InventoryManager.instance.AddToInventoryIndex(gameEquipment[y]);
+						break;
+					}
 				}
 			}
 
@@ -171,8 +215,11 @@ class GameData
 {
 	public int currentGameLevel;
 	public int playerStartingHealth;
+	public int playerStartingDamage;
 	public int playerCoins;
 	public int playerLevel;
 	public int playerExp;
-	public string activeWeaponName;
+	public List<int> hi;
+	public List<string> currentEquipment = new List<string>();
+	public List<string> inventory = new List<string>();
 }

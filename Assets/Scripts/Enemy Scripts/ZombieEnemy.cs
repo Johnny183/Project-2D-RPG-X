@@ -12,11 +12,13 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 	private bool pathing = false;
 	private float repathRate = 0.3f;
 	private Rigidbody2D rb2D;
+	private Animator animator;
 
 	void Start(){
 		aiCanvas.gameObject.SetActive(true);
 		seeker = GetComponent<Seeker>();
 		rb2D = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 
 		StartCoroutine(RepeatGetPath());
 	}
@@ -87,7 +89,20 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 
 			Vector2 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
 			if(Vector2.Distance(transform.position, target.transform.position) >= distanceToTarget){
+				Vector3 curPos = transform.position;
 				rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
+
+				Debug.Log("Old position: " + curPos + "\nNew Position: " + transform.position);
+				if(curPos.x > transform.position.x){
+					facingDirection = "LEFT";
+				} else if(curPos.x < transform.position.x){
+					facingDirection = "RIGHT";
+				} else if(curPos.y > transform.position.y) {
+					facingDirection = "DOWN";
+				} else if(curPos.y < transform.position.y) {
+					facingDirection = "UP";
+				}
+				ChangeDirection(gameObject, facingDirection);
 			}
 
 			if(Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]) < 1f){
@@ -99,6 +114,7 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 	public void AttemptAttack(){
 		bool attemptAttack = base.MeleeAttackPlayer(gameObject, target, facingDirection, attackDistance, blockingLayer, minMeleeDamage, maxMeleeDamage);
 		if(attemptAttack){
+			animator.SetTrigger("EnemyAttack");
 			canAttack = false;
 			attackDelayCount = 0f;
 		}

@@ -5,20 +5,29 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour {
 	private PlayerController playerController;
-	private CustomWeaponInterface weaponScript;
 	private GameObject weapon;
-	private string weaponScriptName;
+	
+	[SerializeField]
+	private int playerDamage;
 
 	private Vector3 position;
-	private Vector3 rotation;
 
 	void Start () {
-		weapon = GameObject.FindGameObjectWithTag("Weapon");
-		weaponScript = weapon.GetComponent<CustomWeaponInterface>();
 		playerController = GetComponent<PlayerController>();
+
+		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
+		int statsDamage = 0;
+		for(int i = 0; i < currentEquipment.Length; i++){
+			if(currentEquipment[i] != null){
+				statsDamage += currentEquipment[i].damageModifier;
+			}
+		}
+		playerDamage = GameManager.instance.playerStartingDamage + statsDamage;
 	}
-	
+
 	void Update () {
+		if(!FindWeapon()){ return;}
+
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
 			playerController.facingDirection = "UP";
 			UpdatePlayer();
@@ -45,6 +54,20 @@ public class PlayerShooting : MonoBehaviour {
 		}
 	}
 
+	public bool FindWeapon(){
+		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
+		for(int i = 0; i < currentEquipment.Length; i++){
+			if(currentEquipment[i] != null){
+				if(currentEquipment[i].equipSlot == EquipmentSlot.Weapon && currentEquipment[i].refObject != null){
+					weapon = currentEquipment[i].refObject;
+					GameObject.FindGameObjectWithTag("SpecialCooldown").SetActive(true);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private void UpdatePlayer(){
 		playerController.ChangeDirection();
 		playerController.StartPlayerShootingCooldown();
@@ -65,7 +88,7 @@ public class PlayerShooting : MonoBehaviour {
 				FacingDown();
 				break;
 		}
-		weaponScript.FirePrimary(position, rotation);
+		//weapon.GetComponent<CustomWeaponInterface>().FirePrimary(position, rotation);
 	}
 
 	public void FireSpecial(){
@@ -83,26 +106,27 @@ public class PlayerShooting : MonoBehaviour {
 				FacingDown();
 				break;
 		}
-		weaponScript.FireSpecial(position, rotation);
+		//weapon.GetComponent<CustomWeaponInterface>().FireSpecial(position, rotation);
 	}
 
 	private void FacingRight(){
 		position = new Vector3(transform.position.x + 0.65f, transform.position.y, transform.position.z);
-		rotation = new Vector3(0, 0, -90);
 	}
 
 	private void FacingLeft(){
 		position = new Vector3(transform.position.x - 0.65f, transform.position.y, transform.position.z);
-		rotation = new Vector3(0, 0, 90);
 	}
 
 	private void FacingUp(){
 		position = new Vector3(transform.position.x, transform.position.y + 0.8f, transform.position.z);
-		rotation = new Vector3(0, 0, 0);
 	}
 	
 	private void FacingDown(){
 		position = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
-		rotation = new Vector3(0, 0, 180);
 	}
+}
+
+interface WeaponBaseInterface {
+	void FirePrimary(Vector3 position, int damage);
+	void FireSpecial(Vector3 position, int damage);
 }

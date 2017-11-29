@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class SceneSetupManager : MonoBehaviour {
 	public Transform environment;
+	public GameObject player;
 	public GameObject[] floors;
 	public GameObject[] walls;
-	public GameObject[] enemies;
 	public GameObject[] randomItems;
 
 	// Called while scene is loading since gameobject is already in scene
 	void Awake () {
 		ReplaceWallTiles();
 		ReplaceFloorTiles();
-		ReplaceEnemies();
-		SetupPlayer();
 	}
 
 	void Start(){
@@ -74,16 +72,6 @@ public class SceneSetupManager : MonoBehaviour {
 
 			Destroy(objects[i].gameObject);
 		}
-	}
-
-	// Replace generic enemies prefab with random enemies carrying properties
-	private void ReplaceEnemies(){
-		
-	}
-
-	// Setup player sets player specific preferences which we take from our gamemanager script like weapons, armor, etc
-	private void SetupPlayer(){
-		
 	}
 
 	private void SceneSetupError(){
