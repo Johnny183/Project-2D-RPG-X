@@ -24,11 +24,10 @@ public class PlayerController : MonoBehaviour {
 		playerUI.gameObject.SetActive(true);
 		rb2d = GetComponent<Rigidbody2D>();
 		boxCollider = GetComponent<BoxCollider2D>();
-		playerInteractDist = GameManager.instance.playerIneractDist;
 	}
 
 	void Start(){
-		EquipmentManager.instance.LoadPlayerEquipment();
+		playerInteractDist = GameManager.instance.playerIneractDist;
 	}
 	
 	// Called every game frame

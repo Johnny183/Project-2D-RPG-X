@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerShooting : MonoBehaviour {
 	private PlayerController playerController;
 	private GameObject weapon;
+
+	private GameObject specialCooldown;
 	
 	[SerializeField]
 	private int playerDamage;
@@ -14,6 +16,7 @@ public class PlayerShooting : MonoBehaviour {
 
 	void Start () {
 		playerController = GetComponent<PlayerController>();
+		EquipmentManager.instance.onEquipmentChanged += FindWeapon;
 
 		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
 		int statsDamage = 0;
@@ -23,10 +26,16 @@ public class PlayerShooting : MonoBehaviour {
 			}
 		}
 		playerDamage = GameManager.instance.playerStartingDamage + statsDamage;
+		FindWeapon();
+	}
+
+	private void UpdatePlayer(){
+		playerController.ChangeDirection();
+		playerController.StartPlayerShootingCooldown();
 	}
 
 	void Update () {
-		if(!FindWeapon()){ return;}
+		if(weapon == null){ return; }
 
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
 			playerController.facingDirection = "UP";
@@ -54,23 +63,25 @@ public class PlayerShooting : MonoBehaviour {
 		}
 	}
 
-	public bool FindWeapon(){
+	// Could be optimized as this is getting called every update frame
+	public void FindWeapon(){
 		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
 		for(int i = 0; i < currentEquipment.Length; i++){
 			if(currentEquipment[i] != null){
 				if(currentEquipment[i].equipSlot == EquipmentSlot.Weapon && currentEquipment[i].refObject != null){
 					weapon = currentEquipment[i].refObject;
-					GameObject.FindGameObjectWithTag("SpecialCooldown").SetActive(true);
-					return true;
+					specialCooldown = GameObject.FindGameObjectWithTag("SpecialCooldown");
+					specialCooldown.SetActive(true);
 				}
 			}
 		}
-		return false;
-	}
 
-	private void UpdatePlayer(){
-		playerController.ChangeDirection();
-		playerController.StartPlayerShootingCooldown();
+		if(specialCooldown != null){
+			specialCooldown.SetActive(false);	
+		}
+
+		specialCooldown = null;
+		weapon = null;
 	}
 
 	public void FirePrimary(){
@@ -88,7 +99,8 @@ public class PlayerShooting : MonoBehaviour {
 				FacingDown();
 				break;
 		}
-		//weapon.GetComponent<CustomWeaponInterface>().FirePrimary(position, rotation);
+		int randDamage = Random.Range(playerDamage-3, playerDamage+3);
+		weapon.GetComponent<WeaponBaseInterface>().FirePrimary(gameObject, playerController.facingDirection, position, randDamage);
 	}
 
 	public void FireSpecial(){
@@ -106,7 +118,26 @@ public class PlayerShooting : MonoBehaviour {
 				FacingDown();
 				break;
 		}
-		//weapon.GetComponent<CustomWeaponInterface>().FireSpecial(position, rotation);
+		int randDamage = Random.Range(playerDamage-3, playerDamage+3);
+		weapon.GetComponent<WeaponBaseInterface>().FireSpecial(gameObject, playerController.facingDirection, position, randDamage);
+	}
+
+	// Setup special cooldown stuff here like cooldown time and special image provided by specific weapon
+	public void StartSpecialCooldown(Sprite specialImage, float cooldownTime){
+
+	}
+
+	// Handle cooldown here
+	private IEnumerator SpecialCooldown(float cooldownTime){
+		while(cooldownTime > 0){
+			yield return new WaitForSeconds(1);
+
+			// Handle delay time code here
+
+			cooldownTime--;
+		}
+
+		// Handle code once timer has ended
 	}
 
 	private void FacingRight(){
@@ -127,6 +158,6 @@ public class PlayerShooting : MonoBehaviour {
 }
 
 interface WeaponBaseInterface {
-	void FirePrimary(Vector3 position, int damage);
-	void FireSpecial(Vector3 position, int damage);
+	void FirePrimary(GameObject caller, string facingDirection, Vector3 position, int damage);
+	void FireSpecial(GameObject caller, string facingDirection, Vector3 position, int damage);
 }

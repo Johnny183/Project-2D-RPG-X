@@ -33,10 +33,9 @@ public class GameManager : MonoBehaviour {
 	public float playerIneractDist;
 
 	[Header("Audio Options")]
-	public int gameVolume;
-	public int musicVolume;
+	public float gameVolume;
+	public float musicVolume;
 
-	private AIEnemyBase aiEnemyBase;
 	private FadeScenes fadeScenes;
 
 	void Awake(){
@@ -54,7 +53,6 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 	}
 
-	// For testing, will be removed when we have a menu to load scenes from
 	void Start(){
 		// Load our game, if not, setup our defaults
 		if(presetManagerValues){
@@ -68,14 +66,14 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		aiEnemyBase = GetComponent<AIEnemyBase>();
+		SceneManager.sceneLoaded += OnSceneLoaded;
 		fadeScenes = GetComponent<FadeScenes>();
 
 		// Load our persistent scenes on top of our level scene
 		SceneManager.LoadScene("PlayerQMenu", LoadSceneMode.Additive);
-		SceneManager.LoadScene("PauseMenu", LoadSceneMode.Additive);
 
-		LoadGameScene("Level1");
+		//LoadGameScene("Level1");
+		LoadGameScene("MainMenu");
 	}
 
 	//Setup default variables
@@ -97,7 +95,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void LoadGameScene(string sceneName){
-		if(sceneName == "Menu"){
+		if(sceneName == "MainMenu"){
 			gameState = "Menu";
 		} else {
 			gameState = "Game";
@@ -106,14 +104,19 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(LoadScene(sceneName));
 	}
 
+	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode){
+		if(gameState == "Game"){
+			EquipmentManager.instance.LoadPlayerEquipment();
+		}
+	}
+
 	private IEnumerator LoadScene(string sceneName){
 		fadeScenes.BeginFade(1);
 		yield return new WaitForSeconds(fadeScenes.fadeSpeed);
 
 		// Load game scene as a single entity
 		SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
-		SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-
+		fadeScenes.alpha = 1;
 		fadeScenes.BeginFade(-1);
 	}
 
@@ -219,7 +222,6 @@ class GameData
 	public int playerCoins;
 	public int playerLevel;
 	public int playerExp;
-	public List<int> hi;
 	public List<string> currentEquipment = new List<string>();
 	public List<string> inventory = new List<string>();
 }

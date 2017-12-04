@@ -12,7 +12,6 @@ public class PlayerHealth : MonoBehaviour {
 	public float flashSpeed = 5f;
 	public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 	
-	private PlayerController playerController;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
 
@@ -20,7 +19,6 @@ public class PlayerHealth : MonoBehaviour {
 	private bool damaged = false;
 
 	void Start () {
-		playerController = GetComponent<PlayerController>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
 
@@ -79,7 +77,6 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	private void PlayerDeath(){
-		// Set player controller to death state
 		UpdatePlayerHealth();
 		GameManager.instance.LoadGameScene("Level1");
 	}

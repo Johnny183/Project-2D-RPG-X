@@ -16,7 +16,7 @@ public class PlayerCurrency : MonoBehaviour {
 	}
 	
 	void Update () {
-		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x + 0.71f, transform.position.y + 0.73f, transform.position.x));
+		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x + 0.78f, transform.position.y + 0.73f, transform.position.x));
 		currencyImage.transform.position = screenPos;
 	}
 
