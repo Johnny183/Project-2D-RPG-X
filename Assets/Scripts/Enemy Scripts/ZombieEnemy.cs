@@ -89,17 +89,17 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 
 			Vector2 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
 			if(Vector2.Distance(transform.position, target.transform.position) >= distanceToTarget){
-				Vector3 curPos = transform.position;
-				rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
-
-				Debug.Log("Old position: " + curPos + "\nNew Position: " + transform.position);
-				if(curPos.x > transform.position.x){
+				//rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
+				//Vector3 newPos = new Vector3(transform.position.x + dir.x, transform.position.y + dir.y, transform.position.x);
+				Vector3 newPos = Vector3.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y) + dir, (moveSpeed * Time.fixedDeltaTime));
+				transform.position = newPos;
+				if(transform.position.x > target.transform.position.x){
 					facingDirection = "LEFT";
-				} else if(curPos.x < transform.position.x){
+				} else if(transform.position.x < target.transform.position.x){
 					facingDirection = "RIGHT";
-				} else if(curPos.y > transform.position.y) {
+				} else if(transform.position.y > target.transform.position.y) {
 					facingDirection = "DOWN";
-				} else if(curPos.y < transform.position.y) {
+				} else if(transform.position.y < target.transform.position.y) {
 					facingDirection = "UP";
 				}
 				ChangeDirection(gameObject, facingDirection);

@@ -168,6 +168,7 @@
      <Compile Include="Assets\Scripts\Menu Scripts\EquipmentUI.cs" />
      <Compile Include="Assets\Scripts\Menu Scripts\EquipmentUISlot.cs" />
      <Compile Include="Assets\Scripts\Menu Scripts\FixScrollRects.cs" />
+     <Compile Include="Assets\Scripts\Menu Scripts\GameOptionsMenu.cs" />
      <Compile Include="Assets\Scripts\Menu Scripts\InventoryManager.cs" />
      <Compile Include="Assets\Scripts\Menu Scripts\InventorySlot.cs" />
      <Compile Include="Assets\Scripts\Menu Scripts\InventoryUI.cs" />

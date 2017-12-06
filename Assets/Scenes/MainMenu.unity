@@ -259,11 +259,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -293,7 +293,9 @@ GameObject:
   - component: {fileID: 59199219}
   - component: {fileID: 59199222}
   - component: {fileID: 59199221}
+  - component: {fileID: 59199224}
   - component: {fileID: 59199220}
+  - component: {fileID: 59199223}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
@@ -340,9 +342,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0.23529412}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.47058824}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -403,6 +405,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1811379487}
+        m_MethodName: MenuSelected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &59199221
@@ -438,6 +451,86 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 59199218}
+--- !u!114 &59199223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 59199218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1811379487}
+          m_MethodName: MouseOverLevel
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 59199218}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1811379487}
+          m_MethodName: MouseLeaveLevel
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 59199218}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1811379487}
+          m_MethodName: InvokeClick
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 59199220}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
+--- !u!111 &59199224
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 59199218}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: c17d1ae9a360c954fab4fd71a6190cd0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 32bf2ddd9d105d04382f81119cbf7ffc, type: 2}
+  - {fileID: 7400000, guid: c17d1ae9a360c954fab4fd71a6190cd0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &128206651 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1722492049586294, guid: ed5a466ef5cbf144fa55d74fcf9f55de,
@@ -1020,6 +1113,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1811379487}
+        m_MethodName: MenuSelected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &183872371
@@ -1250,11 +1354,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -1589,6 +1693,10 @@ Prefab:
         type: 2}
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: MouseLeaveLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977877845628244, guid: 5f47f2a9159000f479c98146ad8b8738, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5f47f2a9159000f479c98146ad8b8738, type: 2}
@@ -3590,7 +3698,6 @@ GameObject:
   m_Component:
   - component: {fileID: 974404871}
   - component: {fileID: 974404870}
-  - component: {fileID: 974404869}
   - component: {fileID: 974404868}
   - component: {fileID: 974404872}
   m_Layer: 5
@@ -3616,27 +3723,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &974404869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 974404867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
 --- !u!223 &974404870
 Canvas:
   m_ObjectHideFlags: 0
@@ -3815,22 +3901,22 @@ Prefab:
     - target: {fileID: 114662093817564944, guid: 5f47f2a9159000f479c98146ad8b8738,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114662093817564944, guid: 5f47f2a9159000f479c98146ad8b8738,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114105058687266128, guid: 5f47f2a9159000f479c98146ad8b8738,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114105058687266128, guid: 5f47f2a9159000f479c98146ad8b8738,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114555073181903944, guid: 5f47f2a9159000f479c98146ad8b8738,
         type: 2}
@@ -3840,6 +3926,20 @@ Prefab:
     - target: {fileID: 1541184006297232, guid: 5f47f2a9159000f479c98146ad8b8738, type: 2}
       propertyPath: m_Name
       value: New Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 114386746235978116, guid: 5f47f2a9159000f479c98146ad8b8738,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MouseOverLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 114386746235978116, guid: 5f47f2a9159000f479c98146ad8b8738,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MouseLeaveLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977877845628244, guid: 5f47f2a9159000f479c98146ad8b8738, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5f47f2a9159000f479c98146ad8b8738, type: 2}
@@ -4947,6 +5047,11 @@ GameObject:
   m_PrefabParentObject: {fileID: 1792894998193708, guid: ed5a466ef5cbf144fa55d74fcf9f55de,
     type: 2}
   m_PrefabInternal: {fileID: 1168572332}
+--- !u!1 &1294128490 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1977877845628244, guid: 5f47f2a9159000f479c98146ad8b8738,
+    type: 2}
+  m_PrefabInternal: {fileID: 374050352}
 --- !u!1 &1295355014
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,11 +5604,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -6921,9 +7026,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61a83d8b0a6a9884eae0e9cd40f43ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  continuePanelLocked: {fileID: 1294128490}
+  continueGoButton: {fileID: 180943370}
   pointerEnterClip: {fileID: 7400000, guid: c17d1ae9a360c954fab4fd71a6190cd0, type: 2}
   pointerLeaveClip: {fileID: 7400000, guid: 32bf2ddd9d105d04382f81119cbf7ffc, type: 2}
-  continueGoButton: {fileID: 180943370}
 --- !u!224 &1881768468 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224721646303045746, guid: ed5a466ef5cbf144fa55d74fcf9f55de,
@@ -7065,11 +7171,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:

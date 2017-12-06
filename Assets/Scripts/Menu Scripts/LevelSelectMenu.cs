@@ -32,7 +32,7 @@ public class LevelSelectMenu : MonoBehaviour {
 	}
 
 	public void MouseOverLevel(GameObject caller){
-		if(!caller.transform.Find("Locked Panel").gameObject.activeSelf && !caller.GetComponent<Animation>().isPlaying){
+		if(!caller.transform.Find("Locked Panel").gameObject.activeSelf && !caller.GetComponent<Animation>().IsPlaying("TextSwing")){
 			caller.GetComponent<Animation>().clip = pointerEnterClip;
 			caller.GetComponent<Animation>().Play();
 		}
@@ -43,5 +43,10 @@ public class LevelSelectMenu : MonoBehaviour {
 			caller.GetComponent<Animation>().clip = pointerLeaveClip;
 			caller.GetComponent<Animation>().Play();
 		}
+	}
+
+	public void InvokeClick(Button caller){
+		caller.transform.localScale = new Vector3(1, 1, 1);
+		caller.onClick.Invoke();
 	}
 }

@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene("PlayerQMenu", LoadSceneMode.Additive);
 
 		//LoadGameScene("Level1");
+		StartCoroutine(ScanGraph());
 		LoadGameScene("MainMenu");
 	}
 
@@ -94,6 +95,16 @@ public class GameManager : MonoBehaviour {
 		SaveGame();
 	}
 
+	// A* PathFinding update graph
+	private IEnumerator ScanGraph(){
+		while(true){
+			yield return new WaitForSeconds(5);
+			if(AstarPath.active){
+				AstarPath.active.Scan(AstarPath.active.data.gridGraph);
+			}
+		}
+	}
+
 	public void LoadGameScene(string sceneName){
 		if(sceneName == "MainMenu"){
 			gameState = "Menu";
@@ -101,20 +112,24 @@ public class GameManager : MonoBehaviour {
 			gameState = "Game";
 		}
 
+		Time.timeScale = 1;
 		StartCoroutine(LoadScene(sceneName));
 	}
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode){
+		Debug.Log("Loading Complete...");
 		if(gameState == "Game"){
 			EquipmentManager.instance.LoadPlayerEquipment();
 		}
 	}
 
 	private IEnumerator LoadScene(string sceneName){
+		Debug.Log("Preparing Level..." + sceneName);
 		fadeScenes.BeginFade(1);
 		yield return new WaitForSeconds(fadeScenes.fadeSpeed);
 
 		// Load game scene as a single entity
+		Debug.Log("Loading Level..." + sceneName);
 		SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 		fadeScenes.alpha = 1;
 		fadeScenes.BeginFade(-1);

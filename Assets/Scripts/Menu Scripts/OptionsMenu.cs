@@ -10,6 +10,11 @@ public class OptionsMenu : MonoBehaviour {
 	public AnimationClip pointerEnterClip;
 	public AnimationClip pointerLeaveClip;
 
+	void Awake(){
+		musicSlider.value = GameManager.instance.musicVolume;
+		gameSlider.value = GameManager.instance.gameVolume;
+	}
+
 	public void SetGameVolume(){
 		SoundManager.instance.SetGameVolume(gameSlider.value);
 		GameManager.instance.gameVolume = gameSlider.value;

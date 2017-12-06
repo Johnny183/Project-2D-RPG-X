@@ -35,6 +35,9 @@ public class EquipmentManager : MonoBehaviour {
 			if(currentEquipment[i] != null){
 				if(currentEquipment[i].refObject != null){
 					Instantiate(currentEquipment[i].refObject);
+					if(currentEquipment[i].equipSlot == EquipmentSlot.Weapon){
+						GameObject.Find("Player").GetComponent<PlayerShooting>().NewWeapon(currentEquipment[i]);
+					}
 				}
 			}
 		}
@@ -63,14 +66,20 @@ public class EquipmentManager : MonoBehaviour {
 
 		if(newItem.refObject != null){
 			Instantiate(newItem.refObject);
-		}
 
-		//LoadPlayerEquipment();
+			if(newItem.equipSlot == EquipmentSlot.Weapon){
+				GameObject.Find("Player").GetComponent<PlayerShooting>().NewWeapon(newItem);
+			}
+		}
 	}
 
 	public void Unequip(int slotIndex){
 		if(currentEquipment[slotIndex] != null){
 			Equipment oldItem = currentEquipment[slotIndex];
+
+			if(oldItem.equipSlot == EquipmentSlot.Weapon){
+				GameObject.Find("Player").GetComponent<PlayerShooting>().LoseWeapon();
+			}
 
 			if(oldItem.refObject != null){
 				Destroy(oldItem.refObject);
@@ -82,8 +91,6 @@ public class EquipmentManager : MonoBehaviour {
 			if(onEquipmentChanged != null){
 				onEquipmentChanged.Invoke();
 			}
-
-			//LoadPlayerEquipment();
 		}
 	}
 

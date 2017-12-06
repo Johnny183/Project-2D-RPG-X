@@ -47,6 +47,7 @@ public class AIEnemyBase : AttackBase {
 	public void LoadAIEnemyBase(){
 		if(GameObject.FindGameObjectWithTag("Player") != null){
 			target = GameObject.FindGameObjectWithTag("Player");
+			Debug.Log("Found Player");
 		}
 	}
 

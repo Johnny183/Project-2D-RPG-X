@@ -4,10 +4,16 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour {
+
+	public GameObject specialCooldownUI;
+	public Text specialTime;
+	public Image specialImage;
+	public Image specialBlur;
+
 	private PlayerController playerController;
 	private GameObject weapon;
-
-	private GameObject specialCooldown;
+	private float specialCooldown;
+	private bool specialActive = false;
 	
 	[SerializeField]
 	private int playerDamage;
@@ -16,7 +22,7 @@ public class PlayerShooting : MonoBehaviour {
 
 	void Start () {
 		playerController = GetComponent<PlayerController>();
-		EquipmentManager.instance.onEquipmentChanged += FindWeapon;
+		//EquipmentManager.instance.onEquipmentChanged += FindWeapon;
 
 		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
 		int statsDamage = 0;
@@ -26,7 +32,7 @@ public class PlayerShooting : MonoBehaviour {
 			}
 		}
 		playerDamage = GameManager.instance.playerStartingDamage + statsDamage;
-		FindWeapon();
+		//FindWeapon();
 	}
 
 	private void UpdatePlayer(){
@@ -36,6 +42,13 @@ public class PlayerShooting : MonoBehaviour {
 
 	void Update () {
 		if(weapon == null){ return; }
+
+		// todo: Add
+		if(specialBlur != null){
+			if(specialBlur.fillAmount != 0){
+				specialBlur.fillAmount -= 1 / specialCooldown * Time.deltaTime;
+			}
+		}
 
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
 			playerController.facingDirection = "UP";
@@ -63,24 +76,46 @@ public class PlayerShooting : MonoBehaviour {
 		}
 	}
 
-	// Could be optimized as this is getting called every update frame
-	public void FindWeapon(){
+	/*public void FindWeapon(){
 		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
 		for(int i = 0; i < currentEquipment.Length; i++){
 			if(currentEquipment[i] != null){
 				if(currentEquipment[i].equipSlot == EquipmentSlot.Weapon && currentEquipment[i].refObject != null){
 					weapon = currentEquipment[i].refObject;
-					specialCooldown = GameObject.FindGameObjectWithTag("SpecialCooldown");
-					specialCooldown.SetActive(true);
+					specialCooldownUI = GameObject.FindGameObjectWithTag("SpecialCooldown");
+					specialCooldownUI.SetActive(true);
+					StartSpecialCooldown(weapon.GetComponent<WeaponBaseInterface>().GetSpecialImage(), weapon.GetComponent<WeaponBaseInterface>().GetSpecialCooldownTime());
 				}
 			}
 		}
 
-		if(specialCooldown != null){
-			specialCooldown.SetActive(false);	
+		if(specialCooldownUI != null){
+			specialCooldownUI.SetActive(false);	
 		}
 
-		specialCooldown = null;
+		specialCooldownUI = null;
+		weapon = null;
+	}*/
+
+	public void NewWeapon(Equipment item){
+		if(item.refObject != null){
+			Debug.Log("New weapon equiped");
+			weapon = item.refObject;
+			specialCooldownUI = GameObject.FindGameObjectWithTag("SpecialCooldown");
+			specialCooldownUI.SetActive(true);
+			StartSpecialCooldown(weapon.GetComponent<WeaponBaseInterface>().GetSpecialImage(), weapon.GetComponent<WeaponBaseInterface>().GetSpecialCooldownTime());
+		}
+	}
+
+	public void LoseWeapon(){
+		Debug.Log("Weapon removed");
+		StopAllCoroutines();
+
+		if(specialCooldownUI != null){
+			specialCooldownUI.SetActive(false);	
+		}
+
+		specialCooldownUI = null;
 		weapon = null;
 	}
 
@@ -104,40 +139,49 @@ public class PlayerShooting : MonoBehaviour {
 	}
 
 	public void FireSpecial(){
-		switch(playerController.facingDirection){
-			case "RIGHT":
-				FacingRight();
-				break;
-			case "LEFT":
-				FacingLeft();
-				break;
-			case "UP":
-				FacingUp();
-				break;
-			default:
-				FacingDown();
-				break;
+		if(specialActive){
+			switch(playerController.facingDirection){
+				case "RIGHT":
+					FacingRight();
+					break;
+				case "LEFT":
+					FacingLeft();
+					break;
+				case "UP":
+					FacingUp();
+					break;
+				default:
+					FacingDown();
+					break;
+			}
+			int randDamage = Random.Range(playerDamage-3, playerDamage+3);
+			weapon.GetComponent<WeaponBaseInterface>().FireSpecial(gameObject, playerController.facingDirection, position, randDamage);
+			StartSpecialCooldown(weapon.GetComponent<WeaponBaseInterface>().GetSpecialImage(), weapon.GetComponent<WeaponBaseInterface>().GetSpecialCooldownTime());
 		}
-		int randDamage = Random.Range(playerDamage-3, playerDamage+3);
-		weapon.GetComponent<WeaponBaseInterface>().FireSpecial(gameObject, playerController.facingDirection, position, randDamage);
 	}
 
-	// Setup special cooldown stuff here like cooldown time and special image provided by specific weapon
-	public void StartSpecialCooldown(Sprite specialImage, float cooldownTime){
+	// todo: Setup special cooldown stuff here like cooldown time and special image provided by specific weapon
+	public void StartSpecialCooldown(Sprite image, float cooldownTime){
+		specialActive = false;
+		specialBlur.fillAmount = 1;
+		specialImage.sprite = image;
+		specialTime.text = "" + cooldownTime;
+		specialCooldown = cooldownTime;
 
+		StartCoroutine(SpecialCooldown(cooldownTime));
 	}
 
-	// Handle cooldown here
+	// todo: Handle cooldown here
 	private IEnumerator SpecialCooldown(float cooldownTime){
 		while(cooldownTime > 0){
 			yield return new WaitForSeconds(1);
-
-			// Handle delay time code here
-
 			cooldownTime--;
+			specialTime.text = "" + cooldownTime;
 		}
 
-		// Handle code once timer has ended
+		specialTime.text = "";
+		specialBlur.fillAmount = 0;
+		specialActive = true;
 	}
 
 	private void FacingRight(){
@@ -160,4 +204,6 @@ public class PlayerShooting : MonoBehaviour {
 interface WeaponBaseInterface {
 	void FirePrimary(GameObject caller, string facingDirection, Vector3 position, int damage);
 	void FireSpecial(GameObject caller, string facingDirection, Vector3 position, int damage);
+	Sprite GetSpecialImage();
+	float GetSpecialCooldownTime();
 }

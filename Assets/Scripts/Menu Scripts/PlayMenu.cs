@@ -5,9 +5,18 @@ using UnityEngine.UI;
 
 public class PlayMenu : MonoBehaviour {
 
+	public GameObject continuePanelLocked;
+	public Button continueGoButton;
 	public AnimationClip pointerEnterClip;
 	public AnimationClip pointerLeaveClip;
-	public Button continueGoButton;
+
+	public void MenuSelected(){
+		if(GameManager.instance.currentGameLevel == 1){
+			continuePanelLocked.SetActive(true);
+		} else {
+			continuePanelLocked.SetActive(false);
+		}
+	}
 
 	public void NewGame(){
 		GameManager.instance.SetupDefaults();
@@ -15,11 +24,23 @@ public class PlayMenu : MonoBehaviour {
 	}
 
 	public void MouseOverLevel(GameObject caller){
+		if(caller.transform.Find("Locked Panel") != null){
+			if(caller.transform.Find("Locked Panel").gameObject.activeSelf){
+				return;
+			}
+		}
+
 		caller.GetComponent<Animation>().clip = pointerEnterClip;
 		caller.GetComponent<Animation>().Play();
 	}
 
 	public void MouseLeaveLevel(GameObject caller){
+		if(caller.transform.Find("Locked Panel") != null){
+			if(caller.transform.Find("Locked Panel").gameObject.activeSelf){
+				return;
+			}
+		}
+
 		caller.GetComponent<Animation>().clip = pointerLeaveClip;
 		caller.GetComponent<Animation>().Play();
 	}

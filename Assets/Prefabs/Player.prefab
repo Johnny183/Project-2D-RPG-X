@@ -754,6 +754,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf309138231bab42aa3e54b04668b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  specialCooldownUI: {fileID: 1396416438105328}
+  specialTime: {fileID: 114139016496118048}
+  specialImage: {fileID: 114124486503150148}
+  specialBlur: {fileID: 114489746548638388}
   playerDamage: 0
 --- !u!114 &114532320103275872
 MonoBehaviour:
