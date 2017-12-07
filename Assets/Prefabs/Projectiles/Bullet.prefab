@@ -99,10 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f68569a82ebfb24e94bdb87ce28a639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 6
-  destroyTime: 6
-  minDamage: 10
-  maxDamage: 15
+  projectileSpeed: 6
+  destroyTime: 4
+  damage: 0
+  additionDamageMultiplier: 0
+  timesDamageMultiplier: 1
 --- !u!212 &212736710501114938
 SpriteRenderer:
   m_ObjectHideFlags: 1

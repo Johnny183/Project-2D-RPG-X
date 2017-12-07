@@ -140,7 +140,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1903254888131976}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.31, y: 2.33, z: -0.078125}
+  m_LocalPosition: {x: 6.850403, y: 1.0006745, z: 0.5078125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224346954465627460}
@@ -445,8 +445,8 @@ MonoBehaviour:
   damaged: 0
   activeEnemies: []
   aiName: Enemy 1
-  aiHealth: 75
-  aiMaxHealth: 75
+  aiHealth: 100
+  aiMaxHealth: 100
   xpGiveAmount: 50
   visualRange: 6
   moveSpeed: 2.4

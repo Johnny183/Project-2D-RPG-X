@@ -183,12 +183,15 @@
      <Compile Include="Assets\Scripts\Player Scripts\PlayerExperience.cs" />
      <Compile Include="Assets\Scripts\Player Scripts\PlayerHealth.cs" />
      <Compile Include="Assets\Scripts\Player Scripts\PlayerShooting.cs" />
+     <Compile Include="Assets\Scripts\Projectile Scripts\BombScript.cs" />
      <Compile Include="Assets\Scripts\Projectile Scripts\BulletScript.cs" />
      <Compile Include="Assets\Scripts\Projectile Scripts\MissileScript.cs" />
+     <Compile Include="Assets\Scripts\Projectile Scripts\ProjectileBase.cs" />
      <Compile Include="Assets\Scripts\SceneSetupManager.cs" />
+     <Compile Include="Assets\Scripts\ScrollingBackground.cs" />
      <Compile Include="Assets\Scripts\SmoothCamera.cs" />
      <Compile Include="Assets\Scripts\SoundManager.cs" />
-     <Compile Include="Assets\ScrollingBackground.cs" />
+     <Compile Include="Assets\Scripts\Weapon Scripts\DefaultWeapon.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark01.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark01_UGUI.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark02.cs" />

@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 
 	[Header("Game Options")]
 	public int currentGameLevel;
+	public float aiRepathRate;
 	public List<Equipment> gameEquipment;
 	public List<Item> gameItems;
 
@@ -72,7 +73,6 @@ public class GameManager : MonoBehaviour {
 		// Load our persistent scenes on top of our level scene
 		SceneManager.LoadScene("PlayerQMenu", LoadSceneMode.Additive);
 
-		//LoadGameScene("Level1");
 		StartCoroutine(ScanGraph());
 		LoadGameScene("MainMenu");
 	}
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour {
 	// A* PathFinding update graph
 	private IEnumerator ScanGraph(){
 		while(true){
-			yield return new WaitForSeconds(5);
+			yield return new WaitForSeconds(aiRepathRate);
 			if(AstarPath.active){
 				AstarPath.active.Scan(AstarPath.active.data.gridGraph);
 			}
@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator LoadScene(string sceneName){
+		Cursor.visible = false;
 		Debug.Log("Preparing Level..." + sceneName);
 		fadeScenes.BeginFade(1);
 		yield return new WaitForSeconds(fadeScenes.fadeSpeed);

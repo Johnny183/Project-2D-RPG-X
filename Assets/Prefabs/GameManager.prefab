@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentEquipment: []
+  currentWeapon: {fileID: 0}
 --- !u!114 &114786604498852360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -132,6 +133,7 @@ MonoBehaviour:
   presetManagerValues: 1
   resetDefaults: 0
   currentGameLevel: 6
+  aiRepathRate: 3
   gameEquipment:
   - {fileID: 11400000, guid: dfea8d0774a23dd4494b620792408d1b, type: 2}
   - {fileID: 11400000, guid: b4f1816df9a2ef24b911b8cc970ffd8d, type: 2}

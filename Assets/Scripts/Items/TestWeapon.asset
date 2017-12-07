@@ -17,6 +17,6 @@ MonoBehaviour:
   sellPrice: 0
   buyPrice: 0
   equipSlot: 4
-  refObject: {fileID: 1941275198749160, guid: 2f7ffa3add8f4224f9ca24909287ff24, type: 2}
-  armorModifier: 2
-  damageModifier: 12
+  refObject: {fileID: 1771995999212228, guid: 94f2941336261b542b7e413ae4dcf742, type: 2}
+  armorModifier: 0
+  damageModifier: 2

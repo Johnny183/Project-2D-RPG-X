@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour {
 	
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
+	private PlayerController playerController;
 
 	private int playerMaxHealth;
 	private bool damaged = false;
@@ -21,6 +22,7 @@ public class PlayerHealth : MonoBehaviour {
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
+		playerController = GetComponent<PlayerController>();
 
 		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
 		int statsHealth = 0;
@@ -77,6 +79,7 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	private void PlayerDeath(){
+		playerController.isPlayerDead = true;
 		UpdatePlayerHealth();
 		GameManager.instance.LoadGameScene("Level1");
 	}

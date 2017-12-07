@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissileScript : MonoBehaviour {
+public class MissileScript : ProjectileBase, SpecialWeaponInterface {
 
+	public int specialUIRotationZ = 90;
 	public float turnSpeed = 200f;
-	public float missileVelocity = 5f;
-	public int minDamage = 30;
-	public int maxDamage = 50;
 	public float explosionRadius = 2f;
 	public GameObject explosionEffect;
 
-	private int randomDamage;
 	private Rigidbody2D rb2d;
 	private GameObject[] targets;
 	private bool canExplode = false;
 
 	// Use this for initialization
 	void Start () {
-		randomDamage = Random.Range(minDamage, maxDamage+1);
 		rb2d = gameObject.GetComponent<Rigidbody2D>();
 		StartCoroutine(delayExplosion(0.1f));
+	}
+
+	public int GetSpecialUIRotationZ(){
+		return specialUIRotationZ;
 	}
 	
 	private IEnumerator delayExplosion(float delayTime){
@@ -49,7 +49,7 @@ public class MissileScript : MonoBehaviour {
 
 			rb2d.angularVelocity = -rotateAmount * turnSpeed;
 		}
-		rb2d.velocity = transform.right * missileVelocity;
+		rb2d.velocity = transform.right * projectileSpeed;
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
@@ -59,13 +59,13 @@ public class MissileScript : MonoBehaviour {
 
 		foreach (Collider2D nearbyObject in colliders) {
 			float proximity = (transform.position - nearbyObject.transform.position).magnitude;
-			int newDamage = Mathf.CeilToInt(randomDamage - (proximity / explosionRadius));
+			int newDamage = Mathf.CeilToInt(CalculateDamage() - (proximity / explosionRadius));
 			
 			if(nearbyObject.CompareTag("Player")){
 				PlayerHealth playerHealth = nearbyObject.gameObject.GetComponent<PlayerHealth>();
 				playerHealth.TakeDamage(newDamage);
 			} else if (nearbyObject.CompareTag("Enemy")){
-				nearbyObject.GetComponent<AIEnemyBase>().TakeDamage(nearbyObject.gameObject, newDamage);
+				nearbyObject.GetComponent<AIEnemyBase>().TakeDamage(newDamage);
 			}
 		}
 

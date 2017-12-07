@@ -36,7 +36,7 @@ public class PlayerExperience : MonoBehaviour {
 		} else {
 			experienceSlider.fillRect.gameObject.SetActive(true);
 		}
-		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + 0.8f, transform.position.x));
+		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + 0.80f, transform.position.x));
 		experienceSlider.transform.position = screenPos;
 
 		if(playerController.isPlayerSpeaking){

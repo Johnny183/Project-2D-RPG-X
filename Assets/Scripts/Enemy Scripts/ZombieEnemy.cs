@@ -49,12 +49,7 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 	}
 
 	void Update(){
-		if(damaged){
-			spriteRenderer.color = Color.red;
-		} else {
-			spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, flashSpeed * Time.deltaTime);
-		}
-		damaged = false;
+		AIDamaged();
 
 		if(canAttack){
 			AttemptAttack();
@@ -67,15 +62,15 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 	}
 
 	void FixedUpdate(){
-		UpdateUIPositions(gameObject, yOffaxisHP, yOffaxisName);
-		UpdateUIValues(gameObject);
+		UpdateUIPositions(yOffaxisHP, yOffaxisName);
+		UpdateUIValues();
 
 		if(targetSpotted){
 			// Visual Range amplifier if we are chasing the target
-			targetInRange = IsTargetInVisualRange(gameObject, visualRange * 1.4f, targetSpotted);
+			targetInRange = IsTargetInVisualRange(visualRange * 1.5f, targetSpotted);
 		} else {
 			// If we have yet to spot the target, normal visual range.
-			targetInRange = IsTargetInVisualRange(gameObject, visualRange, targetSpotted);
+			targetInRange = IsTargetInVisualRange(visualRange, targetSpotted);
 		}
 
 		if(pathing){
@@ -89,39 +84,13 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 
 			Vector2 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
 			if(Vector2.Distance(transform.position, target.transform.position) >= distanceToTarget){
-				//rb2D.MovePosition(new Vector2(transform.position.x, transform.position.y) + dir * (moveSpeed * Time.fixedDeltaTime));
-				//Vector3 newPos = new Vector3(transform.position.x + dir.x, transform.position.y + dir.y, transform.position.x);
-				Vector3 newPos = Vector3.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y) + dir, (moveSpeed * Time.fixedDeltaTime));
-				transform.position = newPos;
-				if(transform.position.x > target.transform.position.x){
-					facingDirection = "LEFT";
-				} else if(transform.position.x < target.transform.position.x){
-					facingDirection = "RIGHT";
-				} else if(transform.position.y > target.transform.position.y) {
-					facingDirection = "DOWN";
-				} else if(transform.position.y < target.transform.position.y) {
-					facingDirection = "UP";
-				}
-				ChangeDirection(gameObject, facingDirection);
+				Move(dir);
 			}
 
 			if(Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]) < 1f){
 				currentWaypoint++;
 			}
 		}
-	}
-
-	public void AttemptAttack(){
-		bool attemptAttack = base.MeleeAttackPlayer(gameObject, target, facingDirection, attackDistance, blockingLayer, minMeleeDamage, maxMeleeDamage);
-		if(attemptAttack){
-			animator.SetTrigger("EnemyAttack");
-			canAttack = false;
-			attackDelayCount = 0f;
-		}
-	}
-
-	public void EnemyDeath(){
-		base.EnemyDeath(gameObject);
 	}
 	
 	public void SetFriendlyTarget(GameObject value){
@@ -131,56 +100,8 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 	public void SetTargetSpotted(bool value){
 		targetSpotted = value;
 	}
-
-	public void SetFacingDirection(string direction){
-		facingDirection = direction;
-	}
-
-	public void SetDamagedTrue(){
-		damaged = true;
-	}
-
-	public void SetAIHealth(int health){
-		aiHealth = health;
-	}
-
-	public void SetUIHealthPosition(Vector3 position){
-		aiHealthSlider.transform.position = position;
-	}
-
-	public void SetUINameTextPosition(Vector3 position){
-		aiNameText.transform.position = position;
-	}
-
-	public void SetUIHealthSliderMaxValue(int value){
-		aiHealthSlider.maxValue = value;
-	}
-
-	public void SetUIHealthSliderValue(int value){
-		aiHealthSlider.value = value;
-	}
-
-	public void SetUINameText(string name){
-		aiNameText.text = name;
-	}
 	
 	public bool GetTargetSpotted(){
 		return targetSpotted;
-	}
-
-	public int GetAIXPGiveAmount(){
-		return xpGiveAmount;
-	}
-
-	public int GetAIMaxHealth() {
-		return aiMaxHealth;
-	}
-
-	public int GetAIHealth() {
-		return aiHealth;
-	}
-
-	public string GetAINameText(){
-		return aiName;
 	}
 }

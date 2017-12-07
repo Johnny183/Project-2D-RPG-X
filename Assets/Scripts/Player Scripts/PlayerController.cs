@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
 	public Canvas playerUI;
 	public LayerMask blockingLayer;
 	public Text playerSpeakingText;
+	public bool isPlayerDead = false;
 
     private BoxCollider2D boxCollider;
 	private Rigidbody2D rb2d;
@@ -54,6 +55,11 @@ public class PlayerController : MonoBehaviour {
 
 	// Called every physics frame
 	void FixedUpdate(){
+		if(isPlayerDead){ 
+			rb2d.velocity = new Vector2(0, 0);
+			return; 
+		}
+
 		// Player movement
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");

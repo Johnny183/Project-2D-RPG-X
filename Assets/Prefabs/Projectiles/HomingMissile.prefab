@@ -99,10 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97b5fd138f505624796db9ae26ba4f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileSpeed: 5
+  destroyTime: 8
+  damage: 0
+  additionDamageMultiplier: 10
+  timesDamageMultiplier: 2
+  specialUIRotationZ: 90
   turnSpeed: 200
-  missileVelocity: 5
-  minDamage: 50
-  maxDamage: 100
   explosionRadius: 2
   explosionEffect: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
     type: 2}

@@ -59,39 +59,39 @@ public class AIEnemyBase : AttackBase {
 		activeEnemies.Remove(caller);
 	}
 
-	public virtual void TakeDamage(GameObject caller, int damage){
-		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
-		int curHealth = callerScript.GetAIHealth();
+	public virtual void TakeDamage(int damage){
+		int curHealth = aiHealth;
 		curHealth -= damage;
-		callerScript.SetAIHealth(curHealth);
+		aiHealth = curHealth;
 		if(curHealth <= 0){
-			callerScript.EnemyDeath();
+			EnemyDeath();
 		}
-		callerScript.SetDamagedTrue();
-		callerScript.SetTargetSpotted(true);
-		UpdateUIValues(caller);
+		damaged = true;
+		GetComponent<AIEnemyInterface>().SetTargetSpotted(true);
+		UpdateUIValues();
 	}
 
-	public virtual void AddHealth(GameObject caller, int amount, int curHealth, int maxHealth){
+	public virtual void AddHealth(int amount, int curHealth, int maxHealth){
 		curHealth += amount;
 		if(curHealth > maxHealth){
 			curHealth = maxHealth;
 		}
-		caller.GetComponent<AIEnemyInterface>().SetAIHealth(curHealth);
+		aiHealth = curHealth;
 	}
 
-	protected virtual void EnemyDeath(GameObject caller){
+	protected virtual void EnemyDeath(){
 		PlayerExperience playerExperience = target.GetComponent<PlayerExperience>();
-		playerExperience.AddExp(caller.GetComponent<AIEnemyInterface>().GetAIXPGiveAmount());
-		Destroy(caller);
+		playerExperience.AddExp(xpGiveAmount);
+		Destroy(gameObject);
 	}
 
-	protected virtual bool IsTargetInVisualRange(GameObject caller, float visualRange, bool targetSpotted){
-		BoxCollider2D bc2d = caller.GetComponent<BoxCollider2D>();
+	protected virtual bool IsTargetInVisualRange(float visualRange, bool targetSpotted){
+		BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
 		if(!targetSpotted){
+			// Check if we can see the target and if the target is within range
 			RaycastHit2D checkDirection;
 			bc2d.enabled = false;
-			checkDirection = Physics2D.Linecast(caller.transform.position, target.transform.position, blockingLayer);
+			checkDirection = Physics2D.Linecast(transform.position, target.transform.position, blockingLayer);
 			bc2d.enabled = true;
 
 			if(checkDirection.transform.CompareTag(target.transform.tag)){
@@ -100,7 +100,8 @@ public class AIEnemyBase : AttackBase {
 				}
 			}
 		} else {
-			float checkDirection = Vector3.Distance(caller.transform.position, target.transform.position);
+			// Checks the distance between the target and the enemy disregarding if we can see it or not
+			float checkDirection = Vector3.Distance(transform.position, target.transform.position);
 			if(checkDirection <= visualRange){
 				return true;
 			}
@@ -108,12 +109,12 @@ public class AIEnemyBase : AttackBase {
 		return false;
 	}
 
-	protected virtual void AlertEnemiesInProximity(GameObject caller, float alertRange){
+	protected virtual void AlertEnemiesInProximity(float alertRange){
 		for(int i = 0; i < activeEnemies.Count; i++){
 			if(!activeEnemies[i].GetComponent<AIEnemyInterface>().GetTargetSpotted()) {
-				float distance = Vector3.Distance(caller.transform.position, activeEnemies[i].transform.position);
+				float distance = Vector3.Distance(transform.position, activeEnemies[i].transform.position);
 				if(distance < 8){
-					activeEnemies[i].GetComponent<AIEnemyInterface>().SetFriendlyTarget(caller);
+					activeEnemies[i].GetComponent<AIEnemyInterface>().SetFriendlyTarget(gameObject);
 				}
 			}
 		}
@@ -127,40 +128,34 @@ public class AIEnemyBase : AttackBase {
 		}
 	}
 
-	protected virtual void MoveToFriendly(GameObject caller, Vector3 destination, float moveSpeed, string facingDirection, float distanceToCheck, LayerMask blockingLayer){
+	protected virtual void MoveToFriendly(Vector3 destination, float moveSpeed, string facingDirection, float distanceToCheck, LayerMask blockingLayer){
 		// Called for the AlertEnemiesInProximity method to move the other enemies to the enemy which alerted
 	}
 
-	protected virtual void Move(GameObject caller, Vector3 destination, float moveSpeed, string facingDirection, float distanceToCheck, LayerMask blockingLayer){
-		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
-		bool checkPath = IsPathClear(caller, destination, distanceToCheck, blockingLayer);
-		Vector3 curPos = caller.transform.position;
-		if(!checkPath){
-			// If we can't go towards our target do some side step checking here
-			return;
-		}
-		Vector3 targetPos = Vector3.MoveTowards(caller.transform.position, destination, moveSpeed);
-		caller.transform.position = targetPos;
+	protected virtual void Move(Vector2 dir){
+		Vector3 newPos = Vector3.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y) + dir, (moveSpeed * Time.fixedDeltaTime));
+		transform.position = newPos;
 
-		if(curPos.x > caller.transform.position.x){
-			callerScript.SetFacingDirection("LEFT");
-		} else if(curPos.x < caller.transform.position.x){
-			callerScript.SetFacingDirection("RIGHT");
-		} else if(curPos.y > caller.transform.position.y) {
-			callerScript.SetFacingDirection("DOWN");
-		} else if(curPos.y < caller.transform.position.y) {
-			callerScript.SetFacingDirection("UP");
+		if(transform.position.x > target.transform.position.x){
+			facingDirection = "LEFT";
+		} else if(transform.position.x < target.transform.position.x){
+			facingDirection = "RIGHT";
+		} else if(transform.position.y > target.transform.position.y) {
+			facingDirection = "DOWN";
+		} else if(transform.position.y < target.transform.position.y) {
+			facingDirection = "UP";
 		}
+
+		ChangeDirection(facingDirection);
 	}
 
-	protected virtual void ChangeDirection(GameObject caller, string facingDirection){
-		Debug.Log(facingDirection);
+	protected virtual void ChangeDirection(string facingDirection){
 		switch(facingDirection){
 			case "RIGHT":
-				caller.transform.eulerAngles = new Vector3(caller.transform.rotation.x, 180, caller.transform.rotation.z);
+				transform.eulerAngles = new Vector3(transform.rotation.x, 180, transform.rotation.z);
 				break;
 			case "LEFT":
-				caller.transform.eulerAngles = new Vector3(caller.transform.rotation.x, 0, caller.transform.rotation.z);
+				transform.eulerAngles = new Vector3(transform.rotation.x, 0, transform.rotation.z);
 				break;
 			case "UP":
 				break;
@@ -169,12 +164,12 @@ public class AIEnemyBase : AttackBase {
 		}
 	}
 
-	protected virtual bool IsPathClear(GameObject caller, Vector3 destination, float distanceToCheck, LayerMask blockingLayer){
+	protected virtual bool IsPathClear(Vector3 destination, float distanceToCheck, LayerMask blockingLayer){
 		RaycastHit2D checkDirection;
-		BoxCollider2D bc2d = caller.GetComponent<BoxCollider2D>();
+		BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
 
 		bc2d.enabled = false;
-		checkDirection = Physics2D.Linecast(caller.transform.position, destination, blockingLayer);
+		checkDirection = Physics2D.Linecast(transform.position, destination, blockingLayer);
 		bc2d.enabled = true;
 
 		if(checkDirection.distance < distanceToCheck){
@@ -184,22 +179,42 @@ public class AIEnemyBase : AttackBase {
 		}
 	}
 
-	protected void UpdateUIValues(GameObject caller){
-		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
-		callerScript.SetUIHealthSliderMaxValue(caller.GetComponent<AIEnemyInterface>().GetAIMaxHealth());
-		callerScript.SetUIHealthSliderValue(caller.GetComponent<AIEnemyInterface>().GetAIHealth());
-		callerScript.SetUINameText(caller.GetComponent<AIEnemyInterface>().GetAINameText());
+	protected virtual void AttemptAttack(){
+		bool attemptAttack = MeleeAttackPlayer(gameObject, target, facingDirection, attackDistance, blockingLayer, minMeleeDamage, maxMeleeDamage);
+		if(attemptAttack){
+			GetComponent<Animator>().SetTrigger("EnemyAttack");
+			canAttack = false;
+			attackDelayCount = 0f;
+		}
 	}
 
-	protected void UpdateUIPositions(GameObject caller, float yOffaxisHP, float yOffaxisName){
-		AIEnemyInterface callerScript = caller.GetComponent<AIEnemyInterface>();
+	protected void AIDamaged(){
+		if(damaged){
+			spriteRenderer.color = Color.red;
+		} else {
+			spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, flashSpeed * Time.deltaTime);
+		}
+		damaged = false;
+	}
 
+	protected void SetUINameColor(Color color){
+		aiNameText.color = color;
+	}
+
+	protected void UpdateUIValues(){
+		aiHealthSlider.maxValue = aiMaxHealth;
+		aiHealthSlider.value = aiHealth;
+		aiNameText.text = aiName;
+	}
+
+	protected virtual void UpdateUIPositions(float yOffaxisHP, float yOffaxisName){
 		Vector3 screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + yOffaxisHP, transform.position.x));
-		callerScript.SetUIHealthPosition(screenPos);
+		aiHealthSlider.transform.position = screenPos;
 
 		screenPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + yOffaxisName, transform.position.x));
-		callerScript.SetUINameTextPosition(screenPos);
+		aiNameText.transform.position = screenPos;
 	}
+	
 }
 
 public class AttackBase : MonoBehaviour {
@@ -265,22 +280,8 @@ public class AttackBase : MonoBehaviour {
 }
 
 public interface AIEnemyInterface {
-	void EnemyDeath();
-	void SetDamagedTrue();
-
 	void SetFriendlyTarget(GameObject target);
 	void SetTargetSpotted(bool value);
-	void SetFacingDirection(string direction);
-	void SetAIHealth(int health);
-	void SetUIHealthPosition(Vector3 position);
-	void SetUINameTextPosition(Vector3 position);
-	void SetUIHealthSliderMaxValue(int value);
-	void SetUIHealthSliderValue(int value);
-	void SetUINameText(string name);
 
 	bool GetTargetSpotted();
-	int GetAIXPGiveAmount();
-	int GetAIMaxHealth();
-	int GetAIHealth();
-	string GetAINameText();
 }

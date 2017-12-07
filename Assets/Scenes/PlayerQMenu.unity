@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.91372555, g: 0.73333335, b: 0.47058827, a: 1}
-    m_HighlightedColor: {r: 0.91372555, g: 0.73333335, b: 0.47058827, a: 1}
+    m_HighlightedColor: {r: 0.7647059, g: 0.5882353, b: 0.3317474, a: 1}
     m_PressedColor: {r: 0.91372555, g: 0.73333335, b: 0.47058827, a: 1}
     m_DisabledColor: {r: 0.91372555, g: 0.73333335, b: 0.47058827, a: 1}
     m_ColorMultiplier: 1
@@ -1711,7 +1711,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2062212429}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 113, y: 155, z: 0}
+  m_LocalPosition: {x: -80.5, y: -268.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1236739917}

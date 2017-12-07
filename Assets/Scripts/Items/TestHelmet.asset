@@ -19,4 +19,4 @@ MonoBehaviour:
   equipSlot: 0
   refObject: {fileID: 0}
   armorModifier: 5
-  damageModifier: 2
+  damageModifier: 0

@@ -10,6 +10,8 @@ public class EquipmentManager : MonoBehaviour {
 
 	public Equipment[] currentEquipment;
 
+	public GameObject currentWeapon = null;
+
 	void Awake(){
 		//Check if instance already exists
         if (instance == null)
@@ -25,18 +27,15 @@ public class EquipmentManager : MonoBehaviour {
 	}
 
 	public void LoadPlayerEquipment(){
-		/*GameObject[] delEquipment = GameObject.FindGameObjectsWithTag("Equipment");
-		for(int i = 0; i < delEquipment.Length; i++){
-			Destroy(delEquipment[i]);
-		}*/
-
 		Transform parent = GameObject.FindGameObjectWithTag("EquipmentSlot").transform;
 		for(int i = 0; i < currentEquipment.Length; i++){
 			if(currentEquipment[i] != null){
 				if(currentEquipment[i].refObject != null){
-					Instantiate(currentEquipment[i].refObject);
 					if(currentEquipment[i].equipSlot == EquipmentSlot.Weapon){
+						currentWeapon = Instantiate(currentEquipment[i].refObject);
 						GameObject.Find("Player").GetComponent<PlayerShooting>().NewWeapon(currentEquipment[i]);
+					} else {
+						Instantiate(currentEquipment[i].refObject);
 					}
 				}
 			}
@@ -56,20 +55,20 @@ public class EquipmentManager : MonoBehaviour {
 			InventoryManager.instance.Add(oldItem);
 		}
 
-		if(onEquipmentChanged != null){
-			onEquipmentChanged.Invoke();
-		}
-
 		Transform equipSlot = GameObject.Find("EquipmentParent").transform.GetChild(slotIndex);
 		equipSlot.GetComponent<EquipmentUISlot>().Equip(newItem);
 		currentEquipment[slotIndex] = newItem;
 
 		if(newItem.refObject != null){
-			Instantiate(newItem.refObject);
+			currentWeapon = Instantiate(newItem.refObject);
 
 			if(newItem.equipSlot == EquipmentSlot.Weapon){
 				GameObject.Find("Player").GetComponent<PlayerShooting>().NewWeapon(newItem);
 			}
+		}
+
+		if(onEquipmentChanged != null){
+			onEquipmentChanged.Invoke();
 		}
 	}
 
@@ -82,7 +81,7 @@ public class EquipmentManager : MonoBehaviour {
 			}
 
 			if(oldItem.refObject != null){
-				Destroy(oldItem.refObject);
+				Destroy(currentWeapon);
 			}
 
 			InventoryManager.instance.Add(oldItem);
