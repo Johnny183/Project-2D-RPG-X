@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Pathfinding;
 
 // Needs optimization but it's playable and functional
 public class AIEnemyBase : AttackBase {
@@ -11,6 +12,7 @@ public class AIEnemyBase : AttackBase {
 
 	[Header("AI Options")]
 	public string aiName = "Unknown";
+	public bool displayUIName = false;
 	public int aiHealth = 100;
 	public int aiMaxHealth = 100;
 	public int xpGiveAmount = 50;
@@ -68,7 +70,7 @@ public class AIEnemyBase : AttackBase {
 		}
 		damaged = true;
 		GetComponent<AIEnemyInterface>().SetTargetSpotted(true);
-		UpdateUIValues();
+		UpdateUIValues(displayUIName);
 	}
 
 	public virtual void AddHealth(int amount, int curHealth, int maxHealth){
@@ -91,7 +93,7 @@ public class AIEnemyBase : AttackBase {
 			// Check if we can see the target and if the target is within range
 			RaycastHit2D checkDirection;
 			bc2d.enabled = false;
-			checkDirection = Physics2D.Linecast(transform.position, target.transform.position, blockingLayer);
+			checkDirection = Physics2D.Linecast(transform.position, target.transform.position);
 			bc2d.enabled = true;
 
 			if(checkDirection.transform.CompareTag(target.transform.tag)){
@@ -133,7 +135,7 @@ public class AIEnemyBase : AttackBase {
 	}
 
 	protected virtual void Move(Vector2 dir){
-		Vector3 newPos = Vector3.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y) + dir, (moveSpeed * Time.fixedDeltaTime));
+		Vector3 newPos = Vector3.Lerp(transform.position, new Vector2(transform.position.x, transform.position.y) + dir, (moveSpeed * Time.fixedDeltaTime));
 		transform.position = newPos;
 
 		if(transform.position.x > target.transform.position.x){
@@ -201,10 +203,15 @@ public class AIEnemyBase : AttackBase {
 		aiNameText.color = color;
 	}
 
-	protected void UpdateUIValues(){
+	protected void UpdateUIValues(bool displayName){
 		aiHealthSlider.maxValue = aiMaxHealth;
 		aiHealthSlider.value = aiHealth;
-		aiNameText.text = aiName;
+
+		if(displayName){
+			aiNameText.text = aiName;
+		} else {
+			aiNameText.text = "";
+		}
 	}
 
 	protected virtual void UpdateUIPositions(float yOffaxisHP, float yOffaxisName){

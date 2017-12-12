@@ -24,14 +24,8 @@ public class PlayerHealth : MonoBehaviour {
 		animator = GetComponent<Animator>();
 		playerController = GetComponent<PlayerController>();
 
-		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
-		int statsHealth = 0;
-		for(int i = 0; i < currentEquipment.Length; i++){
-			if(currentEquipment[i] != null){
-				statsHealth += currentEquipment[i].armorModifier;
-			}
-		}
-		playerMaxHealth = GameManager.instance.playerStartingHealth + statsHealth;
+		EquipmentManager.instance.onEquipmentChanged += UpdateStatsHealth;
+		UpdateStatsHealth();
 		playerHealth = playerMaxHealth;
 		UpdatePlayerHealth();
 	}
@@ -50,9 +44,28 @@ public class PlayerHealth : MonoBehaviour {
 		healthSlider.transform.position = screenPos;
 	}
 
+	public void UpdateStatsHealth(){
+		Equipment[] currentEquipment = EquipmentManager.instance.currentEquipment;
+		int statsHealth = 0;
+		for(int i = 0; i < currentEquipment.Length; i++){
+			if(currentEquipment[i] != null){
+				statsHealth += currentEquipment[i].armorModifier;
+			}
+		}
+		playerMaxHealth = GameManager.instance.playerStartingHealth + statsHealth;
+		
+		if(playerMaxHealth <= playerHealth){
+			playerHealth = playerMaxHealth;
+		}
+
+		UpdatePlayerHealth();
+	}
+
+
 	public void TakeDamage(int amount){
 		if(playerHealth != 0){
 			playerHealth -= amount;
+
 			if(playerHealth <= 0){
 				playerHealth = 0;
 				// Player Death animation
@@ -60,6 +73,7 @@ public class PlayerHealth : MonoBehaviour {
 			} else {
 				animator.SetTrigger("PlayerHit");
 			}
+
 			damaged = true;
 			UpdatePlayerHealth();
 		}

@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 224813159024183130}
   - component: {fileID: 212915918573708448}
   - component: {fileID: 61842115081601970}
-  - component: {fileID: 114694118715220164}
+  - component: {fileID: 114571276806971600}
   m_Layer: 8
   m_Name: Food
   m_TagString: Food
@@ -143,7 +143,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: E
---- !u!114 &114694118715220164
+--- !u!114 &114571276806971600
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -151,13 +151,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1133787608538856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40517ef867dd01c4cb66a25b0ad06683, type: 3}
+  m_Script: {fileID: 11500000, guid: e4b17c4f9514d6d46b68ee760c105aee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randItems:
-  - Sword
-  - Dagger
-  - Gun
+  pickupAddHealth: 15
+  pickupAddExperience: 45
+  pickupTakeDamage: 0
   text: {fileID: 114544427255360354}
   canvas: {fileID: 223004997363771926}
   blockingLayer:
@@ -210,12 +209,12 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -900995045
-  m_SortingLayer: 3
+  m_SortingLayerID: 1861650685
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300036, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -292,8 +291,8 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1133787608538856}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.51, y: -0.49, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.050404, y: 20.270676, z: 0.5859375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224496799179185642}
@@ -302,6 +301,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.51, y: -0.49}
+  m_AnchoredPosition: {x: 11.050404, y: 20.270676}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}

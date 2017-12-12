@@ -86,6 +86,7 @@ MonoBehaviour:
   damaged: 0
   activeEnemies: []
   aiName: Unknown
+  displayUIName: 0
   aiHealth: 100
   aiMaxHealth: 100
   xpGiveAmount: 50
@@ -132,8 +133,8 @@ MonoBehaviour:
   gameState: Menu
   presetManagerValues: 1
   resetDefaults: 0
-  currentGameLevel: 6
-  aiRepathRate: 3
+  currentGameLevel: 3
+  aiRepathRate: 5
   gameEquipment:
   - {fileID: 11400000, guid: dfea8d0774a23dd4494b620792408d1b, type: 2}
   - {fileID: 11400000, guid: b4f1816df9a2ef24b911b8cc970ffd8d, type: 2}

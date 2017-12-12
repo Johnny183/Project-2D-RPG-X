@@ -106,7 +106,7 @@ MonoBehaviour:
   timesDamageMultiplier: 2
   specialUIRotationZ: 90
   turnSpeed: 200
-  explosionRadius: 2
+  explosionRadius: 1.5
   explosionEffect: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
     type: 2}
 --- !u!212 &212977810217153240

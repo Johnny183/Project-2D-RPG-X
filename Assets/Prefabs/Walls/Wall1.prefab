@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4869156261039534}
   - component: {fileID: 212413139972207982}
   - component: {fileID: 61942613451030552}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Wall1
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1823812360478642}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 6200000, guid: ad63fade215a24249914b2fe67a8a4ad, type: 2}
   m_IsTrigger: 0

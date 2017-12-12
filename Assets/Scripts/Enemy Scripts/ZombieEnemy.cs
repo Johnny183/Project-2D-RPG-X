@@ -63,7 +63,7 @@ public class ZombieEnemy : AIEnemyBase, AIEnemyInterface {
 
 	void FixedUpdate(){
 		UpdateUIPositions(yOffaxisHP, yOffaxisName);
-		UpdateUIValues();
+		UpdateUIValues(displayUIName);
 
 		if(targetSpotted){
 			// Visual Range amplifier if we are chasing the target

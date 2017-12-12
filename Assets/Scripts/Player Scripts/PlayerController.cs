@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Pathfinding;
 
 public class PlayerController : MonoBehaviour {
 
@@ -63,6 +64,7 @@ public class PlayerController : MonoBehaviour {
 		// Player movement
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
+
 		if(h * rb2d.velocity.x < maxSpeed){
 			rb2d.velocity = new Vector2(h * maxSpeed, rb2d.velocity.y);
 		}

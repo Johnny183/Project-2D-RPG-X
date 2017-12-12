@@ -157,7 +157,9 @@
      <Compile Include="Assets\EffectExamples\Shared\Scripts\ParticleMenu.cs" />
      <Compile Include="Assets\Scripts\Enemy Scripts\AIEnemyBase.cs" />
      <Compile Include="Assets\Scripts\Enemy Scripts\ZombieEnemy.cs" />
+     <Compile Include="Assets\Scripts\ExitObject.cs" />
      <Compile Include="Assets\Scripts\FadeScenes.cs" />
+     <Compile Include="Assets\Scripts\Food.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\InteractableObject.cs" />
      <Compile Include="Assets\Scripts\Items\Equipment.cs" />

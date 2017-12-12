@@ -321,6 +321,7 @@ MonoBehaviour:
   damaged: 0
   activeEnemies: []
   aiName: Enemy 2
+  displayUIName: 0
   aiHealth: 150
   aiMaxHealth: 150
   xpGiveAmount: 50

@@ -4,28 +4,29 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour {
-	public string[] randItems;
+	public int pickupAddHealth = 0;
+	public int pickupAddExperience = 0;
+	public int pickupTakeDamage = 0;
+	
 	public Text text;
 	public Canvas canvas;
 	public LayerMask blockingLayer;
 
-	private BoxCollider2D boxCollider;
-	private GameObject player;
-	private float interactDistance;
+	protected GameObject player;
+	protected float interactDistance;
 
-	void Start(){
-		boxCollider = GetComponent<BoxCollider2D>();
+	void Awake(){
 		player = GameObject.FindGameObjectWithTag("Player");
 
-		interactDistance = GameManager.instance.playerIneractDist;
-		canvas.gameObject.SetActive(true);
-		text.gameObject.SetActive(false);
+		if(GameManager.instance != null){
+			interactDistance = GameManager.instance.playerIneractDist;
+		}
 	}
 
-	void Update(){
-		boxCollider.enabled = false;
+	public virtual void UpdateUI(){
+		GetComponent<BoxCollider2D>().enabled = false;
 		RaycastHit2D target = Physics2D.Linecast(transform.position, player.transform.position, blockingLayer);
-		boxCollider.enabled = true;
+		GetComponent<BoxCollider2D>().enabled = true;
 
 		if(target.distance < interactDistance){
 			if(target.transform.tag == "Player"){
@@ -40,14 +41,20 @@ public class InteractableObject : MonoBehaviour {
 		}
 	}
 
-	public void Interact(Transform other){
-		int randIndex = Random.Range(0, randItems.Length);
-		PlayerController playerController = other.GetComponent<PlayerController>();
-		PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-		PlayerExperience playerExperience = other.GetComponent<PlayerExperience>();
-		playerHealth.TakeDamage(20);
-		playerExperience.AddExp(250);
-		playerController.CallPlayerSpeak("You picked up a " + randItems[randIndex], Color.yellow, 0, 4, 0f);
+	public virtual void Interact(Transform other){
+
+		if(pickupAddHealth != 0){
+			other.GetComponent<PlayerHealth>().AddHealth(pickupAddHealth);
+		}
+		
+		if(pickupTakeDamage != 0){
+			other.GetComponent<PlayerHealth>().TakeDamage(pickupTakeDamage);
+		}
+
+		if(pickupAddExperience != 0){
+			other.GetComponent<PlayerExperience>().AddExp(pickupAddExperience);
+		}
+
 		Destroy(gameObject);
 	}
 }

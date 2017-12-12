@@ -14,7 +14,7 @@ public class PlayerShooting : MonoBehaviour {
 	private GameObject weapon;
 	private float specialCooldown;
 	private bool specialActive = false;
-	private float primaryFireDelay = 0.25f;
+	public float primaryFireDelay = 0.25f;
 	private float primaryFireTimer = 0f;
 	
 	[SerializeField]
@@ -57,28 +57,28 @@ public class PlayerShooting : MonoBehaviour {
 		if(primaryFireTimer < primaryFireDelay){
 			primaryFireTimer += Time.deltaTime;
 		}
-
-		if(Input.GetKeyDown(KeyCode.UpArrow)){
+		
+		if(Input.GetKey(KeyCode.UpArrow)){
 			playerController.facingDirection = "UP";
 			UpdatePlayer();
 			FirePrimary();
 		}
-		if(Input.GetKeyDown(KeyCode.DownArrow)){
+		if(Input.GetKey(KeyCode.DownArrow)){
 			playerController.facingDirection = "DOWN";
 			UpdatePlayer();
 			FirePrimary();
 		}
-		if(Input.GetKeyDown(KeyCode.LeftArrow)){
+		if(Input.GetKey(KeyCode.LeftArrow)){
 			playerController.facingDirection = "LEFT";
 			UpdatePlayer();
 			FirePrimary();
 		}
-		if(Input.GetKeyDown(KeyCode.RightArrow)){
+		if(Input.GetKey(KeyCode.RightArrow)){
 			playerController.facingDirection = "RIGHT";
 			UpdatePlayer();
 			FirePrimary();
 		}
-		if(Input.GetKeyDown(KeyCode.F)){
+		if(Input.GetKey(KeyCode.F)){
 			playerController.StartPlayerShootingCooldown();
 			FireSpecial();
 		}

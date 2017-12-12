@@ -6,7 +6,7 @@ public class MissileScript : ProjectileBase, SpecialWeaponInterface {
 
 	public int specialUIRotationZ = 90;
 	public float turnSpeed = 200f;
-	public float explosionRadius = 2f;
+	public float explosionRadius = 1.5f;
 	public GameObject explosionEffect;
 
 	private Rigidbody2D rb2d;
